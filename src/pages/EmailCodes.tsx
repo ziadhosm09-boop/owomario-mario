@@ -1,6 +1,21 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { Mail, Copy, Check, Loader2, Package, MessageCircle } from "lucide-react";
+import { Mail, Copy, Check, Loader2 } from "lucide-react";
+
+const AmazonIcon = () => (
+  <svg viewBox="0 0 48 48" className="w-8 h-8" fill="currentColor">
+    <path d="M35.5 29c-5.5 4-13.5 6-20.5 6-9.7 0-18.4-3.6-25-9.6-.5-.5-.1-1.1.6-.7 7.3 4.3 16.4 6.9 25.7 6.9 6.3 0 13.2-1.3 19.6-4 .9-.4 1.7.6.9 1.4z"/>
+    <path d="M37.5 26.5c-.7-.9-4.6-.4-6.4-.2-.5.1-.6-.4-.1-.8 3.1-2.2 8.2-1.6 8.8-.8.6.8-.2 6.3-3.3 8.9-.5.4-1 .2-.7-.3.6-1.5 2-4.9 1.7-5.8z"/>
+    <path d="M33.5 11v-1.5c0-.2.2-.4.4-.4h7.2c.2 0 .4.2.4.4V11c0 .2-.2.5-.4.7l-3.7 5.3c1.4-.1 2.8.2 4 .8.3.1.3.4.4.6v1.6c0 .2-.2.4-.5.3-2-.9-4.7-1-6.9.1-.2.1-.5-.1-.5-.3v-1.5c0-.2 0-.6.2-.9l4.3-6.2h-3.8c-.3 0-.5-.2-.5-.4z"/>
+    <path d="M15.5 20h-2c-.2 0-.4-.2-.4-.4V9.5c0-.2.2-.4.4-.4h1.8c.2 0 .4.2.4.4v1.3h0c.5-1.3 1.5-2 2.8-2 1.3 0 2.2.7 2.8 2 .5-1.3 1.7-2 3-2 .9 0 1.9.4 2.5 1.2.7.9.5 2.2.5 3.3v6.3c0 .2-.2.4-.4.4h-2c-.2 0-.4-.2-.4-.4v-5.3c0-.4 0-1.5-.1-1.9-.1-.7-.5-1-1.2-1-.5 0-1 .3-1.2.8-.2.5-.2 1.3-.2 1.9v5.4c0 .2-.2.4-.4.4h-2c-.2 0-.4-.2-.4-.4v-5.3c0-1.1.2-2.7-1.3-2.7-1.5 0-1.4 1.7-1.4 2.7v5.3c0 .3-.2.5-.4.5z"/>
+  </svg>
+);
+
+const DiscordIcon = () => (
+  <svg viewBox="0 0 48 48" className="w-8 h-8" fill="currentColor">
+    <path d="M40 12c-3.7-3.3-9-3.4-9.3-3.4l-.5.6c4.4 1.3 6.4 3.2 8.5 5.5-7.5-4.1-15.6-4-23 0 2.1-2.3 4.6-4.4 8.5-5.5l-.5-.6s-5.6.1-9.3 3.4C10.6 16.4 8 25.6 8 35c4.1 4.9 10.4 5 10.4 5l1.3-1.7c-2.5-.8-5.4-2.5-7.7-5.5 6.4 4.7 14.9 5.1 22 0-2.3 3-5.2 4.7-7.7 5.5l1.3 1.7s6.3-.1 10.4-5c0-9.4-2.6-18.6-6.4-22.6zM19 30c-1.7 0-3-1.6-3-3.5s1.3-3.5 3-3.5 3 1.6 3 3.5-1.3 3.5-3 3.5zm10 0c-1.7 0-3-1.6-3-3.5s1.3-3.5 3-3.5 3 1.6 3 3.5-1.3 3.5-3 3.5z"/>
+  </svg>
+);
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
@@ -113,7 +128,9 @@ const EmailCodes = () => {
                             : 'bg-background/50'
                           }
                         `}>
-                          <Package className={`w-8 h-8 ${mode === 'amazon' ? 'text-white' : 'text-muted-foreground'}`} />
+                          <div className={mode === 'amazon' ? 'text-white' : 'text-muted-foreground'}>
+                            <AmazonIcon />
+                          </div>
                         </div>
                         <span className={`font-bold text-lg ${mode === 'amazon' ? 'text-white' : 'text-foreground'}`}>
                           Amazon
@@ -146,7 +163,9 @@ const EmailCodes = () => {
                             : 'bg-background/50'
                           }
                         `}>
-                          <MessageCircle className={`w-8 h-8 ${mode === 'discord' ? 'text-white' : 'text-muted-foreground'}`} />
+                          <div className={mode === 'discord' ? 'text-white' : 'text-muted-foreground'}>
+                            <DiscordIcon />
+                          </div>
                         </div>
                         <span className={`font-bold text-lg ${mode === 'discord' ? 'text-white' : 'text-foreground'}`}>
                           Discord
