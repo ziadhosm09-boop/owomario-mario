@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import emailIllustration from "@/assets/email-illustration.jpg";
 import tfaIllustration from "@/assets/2fa-illustration.jpg";
 import phoneIllustration from "@/assets/phone-illustration.jpg";
+import discordCheckerIllustration from "@/assets/discord-checker-illustration.jpg";
 
 const Index = () => {
   const { t } = useTranslation();
@@ -36,7 +37,7 @@ const Index = () => {
       icon: Shield,
       title: t('services.discordChecker.title'),
       description: t('services.discordChecker.description'),
-      image: emailIllustration,
+      image: discordCheckerIllustration,
       link: "/discord-checker",
     },
   ];
