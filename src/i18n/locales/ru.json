@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "home": "Главная",
+    "emailCodes": "Email коды",
+    "twoFAGenerator": "2FA генератор",
+    "phoneVerification": "Проверка телефона",
+    "language": "Язык"
+  },
+  "hero": {
+    "title": "Центр инструментов проверки",
+    "subtitle": "Профессиональные решения для проверки email кодов, генерации 2FA и проверки телефона"
+  },
+  "services": {
+    "emailCodes": {
+      "title": "Email коды",
+      "description": "Получение кодов проверки с email адресов"
+    },
+    "twoFA": {
+      "title": "2FA генератор",
+      "description": "Генерация TOTP кодов из вашего секретного ключа 2FA"
+    },
+    "phoneVerification": {
+      "title": "Проверка телефона",
+      "description": "Получение кодов проверки с номеров телефонов"
+    }
+  },
+  "footer": {
+    "contactTitle": "Для связи или сообщения об ошибке:",
+    "discord": "Discord:"
+  },
+  "twoFA": {
+    "title": "2FA генератор",
+    "subtitle": "Генерация TOTP кодов из вашего секретного ключа 2FA",
+    "secretKeyLabel": "Секретный ключ 2FA",
+    "secretKeyPlaceholder": "Введите ваш секретный ключ 2FA",
+    "currentCode": "Текущий код",
+    "expiresIn": "Истекает через:",
+    "seconds": "секунд",
+    "invalidKeyError": "Неверный секретный ключ",
+    "copiedSuccess": "Код скопирован",
+    "copyError": "Не удалось скопировать код"
+  },
+  "emailCodes": {
+    "title": "Email коды",
+    "subtitle": "Получение кодов проверки с email адресов",
+    "emailLabel": "Email адрес",
+    "emailPlaceholder": "Введите email адрес",
+    "fetchButton": "Получить коды",
+    "noCodesFound": "Коды не найдены",
+    "loading": "Загрузка...",
+    "error": "Произошла ошибка"
+  },
+  "phoneVerification": {
+    "title": "Проверка телефона",
+    "subtitle": "Получение кодов проверки с номеров телефонов",
+    "phoneLabel": "Номер телефона",
+    "phonePlaceholder": "Введите номер телефона",
+    "fetchButton": "Получить код",
+    "noCodeFound": "Код не найден",
+    "loading": "Загрузка...",
+    "error": "Произошла ошибка"
+  }
+}

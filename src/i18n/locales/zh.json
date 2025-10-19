@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "home": "首页",
+    "emailCodes": "邮箱验证码",
+    "twoFAGenerator": "双因素验证生成器",
+    "phoneVerification": "手机验证",
+    "language": "语言"
+  },
+  "hero": {
+    "title": "验证工具中心",
+    "subtitle": "专业的邮箱验证码、双因素验证生成和手机验证解决方案"
+  },
+  "services": {
+    "emailCodes": {
+      "title": "邮箱验证码",
+      "description": "从邮箱地址中获取验证码"
+    },
+    "twoFA": {
+      "title": "双因素验证生成器",
+      "description": "从您的双因素验证密钥生成TOTP验证码"
+    },
+    "phoneVerification": {
+      "title": "手机验证",
+      "description": "从手机号码获取验证码"
+    }
+  },
+  "footer": {
+    "contactTitle": "联系我们或报告错误：",
+    "discord": "Discord："
+  },
+  "twoFA": {
+    "title": "双因素验证生成器",
+    "subtitle": "从您的双因素验证密钥生成TOTP验证码",
+    "secretKeyLabel": "双因素验证密钥",
+    "secretKeyPlaceholder": "输入您的双因素验证密钥",
+    "currentCode": "当前验证码",
+    "expiresIn": "过期时间：",
+    "seconds": "秒",
+    "invalidKeyError": "密钥无效",
+    "copiedSuccess": "验证码已复制",
+    "copyError": "复制验证码失败"
+  },
+  "emailCodes": {
+    "title": "邮箱验证码",
+    "subtitle": "从邮箱地址中获取验证码",
+    "emailLabel": "邮箱地址",
+    "emailPlaceholder": "输入邮箱地址",
+    "fetchButton": "获取验证码",
+    "noCodesFound": "未找到验证码",
+    "loading": "加载中...",
+    "error": "发生错误"
+  },
+  "phoneVerification": {
+    "title": "手机验证",
+    "subtitle": "从手机号码获取验证码",
+    "phoneLabel": "手机号码",
+    "phonePlaceholder": "输入手机号码",
+    "fetchButton": "获取验证码",
+    "noCodeFound": "未找到验证码",
+    "loading": "加载中...",
+    "error": "发生错误"
+  }
+}

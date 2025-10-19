@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "emailCodes": "Códigos de Email",
+    "twoFAGenerator": "Generador 2FA",
+    "phoneVerification": "Verificación de Teléfono",
+    "language": "Idioma"
+  },
+  "hero": {
+    "title": "Centro de Herramientas de Verificación",
+    "subtitle": "Soluciones profesionales de verificación para códigos de email, generación 2FA y verificación telefónica"
+  },
+  "services": {
+    "emailCodes": {
+      "title": "Códigos de Email",
+      "description": "Recuperar códigos de verificación de direcciones de email"
+    },
+    "twoFA": {
+      "title": "Generador 2FA",
+      "description": "Generar códigos TOTP desde tu clave secreta 2FA"
+    },
+    "phoneVerification": {
+      "title": "Verificación de Teléfono",
+      "description": "Obtener códigos de verificación de números telefónicos"
+    }
+  },
+  "footer": {
+    "contactTitle": "Para Contacto o Reportar un Error:",
+    "discord": "Discord:"
+  },
+  "twoFA": {
+    "title": "Generador 2FA",
+    "subtitle": "Generar códigos TOTP desde tu clave secreta 2FA",
+    "secretKeyLabel": "Clave Secreta 2FA",
+    "secretKeyPlaceholder": "Ingresa tu clave secreta 2FA",
+    "currentCode": "Código Actual",
+    "expiresIn": "Expira en:",
+    "seconds": "segundos",
+    "invalidKeyError": "Clave secreta inválida",
+    "copiedSuccess": "Código copiado",
+    "copyError": "Error al copiar código"
+  },
+  "emailCodes": {
+    "title": "Códigos de Email",
+    "subtitle": "Recuperar códigos de verificación de direcciones de email",
+    "emailLabel": "Dirección de Email",
+    "emailPlaceholder": "Ingresa dirección de email",
+    "fetchButton": "Obtener Códigos",
+    "noCodesFound": "No se encontraron códigos",
+    "loading": "Cargando...",
+    "error": "Ocurrió un error"
+  },
+  "phoneVerification": {
+    "title": "Verificación de Teléfono",
+    "subtitle": "Obtener códigos de verificación de números telefónicos",
+    "phoneLabel": "Número de Teléfono",
+    "phonePlaceholder": "Ingresa número de teléfono",
+    "fetchButton": "Obtener Código",
+    "noCodeFound": "No se encontró código",
+    "loading": "Cargando...",
+    "error": "Ocurrió un error"
+  }
+}

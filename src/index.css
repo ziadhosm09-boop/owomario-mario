@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .rotate-y-6 {
+    transform: perspective(1000px) rotateY(6deg);
+  }
+  
+  .translateZ-10 {
+    transform: translateZ(10px);
+  }
+}
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 220 25% 6%;
+    --foreground: 0 0% 95%;
+
+    --card: 220 22% 10%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 220 22% 10%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 220 90% 56%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 280 85% 60%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 220 18% 18%;
+    --muted-foreground: 220 12% 65%;
+
+    --accent: 160 75% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 18% 18%;
+    --input: 220 18% 18%;
+    --ring: 220 90% 56%;
+
+    --radius: 0.75rem;
+
+    --gradient-primary: linear-gradient(135deg, hsl(220 90% 56%) 0%, hsl(280 85% 60%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(280 85% 60%) 0%, hsl(320 80% 55%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(160 75% 45%) 0%, hsl(180 70% 50%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(220 25% 12%) 0%, hsl(240 20% 15%) 100%);
+    --gradient-hero: radial-gradient(ellipse at top, hsl(220 90% 30% / 0.3) 0%, transparent 50%);
+    
+    --shadow-glow: 0 0 60px hsl(220 90% 56% / 0.4);
+    --shadow-glow-accent: 0 0 40px hsl(160 75% 45% / 0.3);
+    --shadow-card: 0 8px 32px hsl(220 90% 10% / 0.5);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}

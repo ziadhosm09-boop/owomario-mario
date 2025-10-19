@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "emailCodes": "أكواد البريد الإلكتروني",
+    "twoFAGenerator": "مولد 2FA",
+    "phoneVerification": "التحقق من الهاتف",
+    "language": "اللغة"
+  },
+  "hero": {
+    "title": "مركز أدوات التحقق",
+    "subtitle": "حلول احترافية للتحقق من أكواد البريد الإلكتروني وتوليد 2FA والتحقق من الهاتف"
+  },
+  "services": {
+    "emailCodes": {
+      "title": "أكواد البريد الإلكتروني",
+      "description": "استرجاع أكواد التحقق من عناوين البريد الإلكتروني"
+    },
+    "twoFA": {
+      "title": "مولد 2FA",
+      "description": "توليد أكواد TOTP من مفتاح 2FA السري الخاص بك"
+    },
+    "phoneVerification": {
+      "title": "التحقق من الهاتف",
+      "description": "الحصول على أكواد التحقق من أرقام الهاتف"
+    }
+  },
+  "footer": {
+    "contactTitle": "للتواصل أو الإبلاغ عن أي خطأ:",
+    "discord": "ديسكورد:"
+  },
+  "twoFA": {
+    "title": "مولد 2FA",
+    "subtitle": "توليد أكواد TOTP من مفتاح 2FA السري الخاص بك",
+    "secretKeyLabel": "مفتاح 2FA السري",
+    "secretKeyPlaceholder": "أدخل مفتاح 2FA السري الخاص بك",
+    "currentCode": "الكود الحالي",
+    "expiresIn": "سينتهي خلال:",
+    "seconds": "ثانية",
+    "invalidKeyError": "مفتاح السر غير صحيح",
+    "copiedSuccess": "تم نسخ الكود",
+    "copyError": "فشل نسخ الكود"
+  },
+  "emailCodes": {
+    "title": "أكواد البريد الإلكتروني",
+    "subtitle": "استرجاع أكواد التحقق من عناوين البريد الإلكتروني",
+    "emailLabel": "عنوان البريد الإلكتروني",
+    "emailPlaceholder": "أدخل عنوان البريد الإلكتروني",
+    "fetchButton": "جلب الأكواد",
+    "noCodesFound": "لم يتم العثور على أكواد",
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ"
+  },
+  "phoneVerification": {
+    "title": "التحقق من الهاتف",
+    "subtitle": "الحصول على أكواد التحقق من أرقام الهاتف",
+    "phoneLabel": "رقم الهاتف",
+    "phonePlaceholder": "أدخل رقم الهاتف",
+    "fetchButton": "جلب الكود",
+    "noCodeFound": "لم يتم العثور على كود",
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ"
+  }
+}

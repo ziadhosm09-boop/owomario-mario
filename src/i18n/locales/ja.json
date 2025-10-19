@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "home": "ホーム",
+    "emailCodes": "メール認証コード",
+    "twoFAGenerator": "2FA生成ツール",
+    "phoneVerification": "電話番号認証",
+    "language": "言語"
+  },
+  "hero": {
+    "title": "認証ツールハブ",
+    "subtitle": "メール認証コード、2FA生成、電話番号認証のプロフェッショナルソリューション"
+  },
+  "services": {
+    "emailCodes": {
+      "title": "メール認証コード",
+      "description": "メールアドレスから認証コードを取得"
+    },
+    "twoFA": {
+      "title": "2FA生成ツール",
+      "description": "2FA秘密鍵からTOTPコードを生成"
+    },
+    "phoneVerification": {
+      "title": "電話番号認証",
+      "description": "電話番号から認証コードを取得"
+    }
+  },
+  "footer": {
+    "contactTitle": "お問い合わせまたはバグ報告：",
+    "discord": "Discord："
+  },
+  "twoFA": {
+    "title": "2FA生成ツール",
+    "subtitle": "2FA秘密鍵からTOTPコードを生成",
+    "secretKeyLabel": "2FA秘密鍵",
+    "secretKeyPlaceholder": "2FA秘密鍵を入力してください",
+    "currentCode": "現在のコード",
+    "expiresIn": "有効期限：",
+    "seconds": "秒",
+    "invalidKeyError": "無効な秘密鍵",
+    "copiedSuccess": "コードをコピーしました",
+    "copyError": "コードのコピーに失敗しました"
+  },
+  "emailCodes": {
+    "title": "メール認証コード",
+    "subtitle": "メールアドレスから認証コードを取得",
+    "emailLabel": "メールアドレス",
+    "emailPlaceholder": "メールアドレスを入力",
+    "fetchButton": "コードを取得",
+    "noCodesFound": "コードが見つかりません",
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました"
+  },
+  "phoneVerification": {
+    "title": "電話番号認証",
+    "subtitle": "電話番号から認証コードを取得",
+    "phoneLabel": "電話番号",
+    "phonePlaceholder": "電話番号を入力",
+    "fetchButton": "コードを取得",
+    "noCodeFound": "コードが見つかりません",
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "emailCodes": "Codes Email",
+    "twoFAGenerator": "Générateur 2FA",
+    "phoneVerification": "Vérification Téléphone",
+    "language": "Langue"
+  },
+  "hero": {
+    "title": "Centre d'Outils de Vérification",
+    "subtitle": "Solutions professionnelles de vérification pour les codes email, génération 2FA et vérification téléphonique"
+  },
+  "services": {
+    "emailCodes": {
+      "title": "Codes Email",
+      "description": "Récupérer les codes de vérification des adresses email"
+    },
+    "twoFA": {
+      "title": "Générateur 2FA",
+      "description": "Générer des codes TOTP depuis votre clé secrète 2FA"
+    },
+    "phoneVerification": {
+      "title": "Vérification Téléphone",
+      "description": "Obtenir des codes de vérification des numéros de téléphone"
+    }
+  },
+  "footer": {
+    "contactTitle": "Pour Contact ou Signaler un Bug:",
+    "discord": "Discord:"
+  },
+  "twoFA": {
+    "title": "Générateur 2FA",
+    "subtitle": "Générer des codes TOTP depuis votre clé secrète 2FA",
+    "secretKeyLabel": "Clé Secrète 2FA",
+    "secretKeyPlaceholder": "Entrez votre clé secrète 2FA",
+    "currentCode": "Code Actuel",
+    "expiresIn": "Expire dans:",
+    "seconds": "secondes",
+    "invalidKeyError": "Clé secrète invalide",
+    "copiedSuccess": "Code copié",
+    "copyError": "Échec de la copie du code"
+  },
+  "emailCodes": {
+    "title": "Codes Email",
+    "subtitle": "Récupérer les codes de vérification des adresses email",
+    "emailLabel": "Adresse Email",
+    "emailPlaceholder": "Entrez l'adresse email",
+    "fetchButton": "Récupérer les Codes",
+    "noCodesFound": "Aucun code trouvé",
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite"
+  },
+  "phoneVerification": {
+    "title": "Vérification Téléphone",
+    "subtitle": "Obtenir des codes de vérification des numéros de téléphone",
+    "phoneLabel": "Numéro de Téléphone",
+    "phonePlaceholder": "Entrez le numéro de téléphone",
+    "fetchButton": "Récupérer le Code",
+    "noCodeFound": "Aucun code trouvé",
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite"
+  }
+}

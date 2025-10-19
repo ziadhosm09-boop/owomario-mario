@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "home": "홈",
+    "emailCodes": "이메일 코드",
+    "twoFAGenerator": "2FA 생성기",
+    "phoneVerification": "전화번호 인증",
+    "language": "언어"
+  },
+  "hero": {
+    "title": "인증 도구 허브",
+    "subtitle": "이메일 코드, 2FA 생성 및 전화번호 인증을 위한 전문 솔루션"
+  },
+  "services": {
+    "emailCodes": {
+      "title": "이메일 코드",
+      "description": "이메일 주소에서 인증 코드 검색"
+    },
+    "twoFA": {
+      "title": "2FA 생성기",
+      "description": "2FA 비밀 키에서 TOTP 코드 생성"
+    },
+    "phoneVerification": {
+      "title": "전화번호 인증",
+      "description": "전화번호에서 인증 코드 가져오기"
+    }
+  },
+  "footer": {
+    "contactTitle": "문의 또는 버그 신고:",
+    "discord": "Discord:"
+  },
+  "twoFA": {
+    "title": "2FA 생성기",
+    "subtitle": "2FA 비밀 키에서 TOTP 코드 생성",
+    "secretKeyLabel": "2FA 비밀 키",
+    "secretKeyPlaceholder": "2FA 비밀 키를 입력하세요",
+    "currentCode": "현재 코드",
+    "expiresIn": "만료 시간:",
+    "seconds": "초",
+    "invalidKeyError": "유효하지 않은 비밀 키",
+    "copiedSuccess": "코드가 복사되었습니다",
+    "copyError": "코드 복사 실패"
+  },
+  "emailCodes": {
+    "title": "이메일 코드",
+    "subtitle": "이메일 주소에서 인증 코드 검색",
+    "emailLabel": "이메일 주소",
+    "emailPlaceholder": "이메일 주소 입력",
+    "fetchButton": "코드 가져오기",
+    "noCodesFound": "코드를 찾을 수 없습니다",
+    "loading": "로딩 중...",
+    "error": "오류가 발생했습니다"
+  },
+  "phoneVerification": {
+    "title": "전화번호 인증",
+    "subtitle": "전화번호에서 인증 코드 가져오기",
+    "phoneLabel": "전화번호",
+    "phonePlaceholder": "전화번호 입력",
+    "fetchButton": "코드 가져오기",
+    "noCodeFound": "코드를 찾을 수 없습니다",
+    "loading": "로딩 중...",
+    "error": "오류가 발생했습니다"
+  }
+}

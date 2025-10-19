@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "home": "Início",
+    "emailCodes": "Códigos de Email",
+    "twoFAGenerator": "Gerador 2FA",
+    "phoneVerification": "Verificação de Telefone",
+    "language": "Idioma"
+  },
+  "hero": {
+    "title": "Centro de Ferramentas de Verificação",
+    "subtitle": "Soluções profissionais de verificação para códigos de email, geração 2FA e verificação telefônica"
+  },
+  "services": {
+    "emailCodes": {
+      "title": "Códigos de Email",
+      "description": "Recuperar códigos de verificação de endereços de email"
+    },
+    "twoFA": {
+      "title": "Gerador 2FA",
+      "description": "Gerar códigos TOTP a partir da sua chave secreta 2FA"
+    },
+    "phoneVerification": {
+      "title": "Verificação de Telefone",
+      "description": "Obter códigos de verificação de números de telefone"
+    }
+  },
+  "footer": {
+    "contactTitle": "Para Contato ou Relatar um Bug:",
+    "discord": "Discord:"
+  },
+  "twoFA": {
+    "title": "Gerador 2FA",
+    "subtitle": "Gerar códigos TOTP a partir da sua chave secreta 2FA",
+    "secretKeyLabel": "Chave Secreta 2FA",
+    "secretKeyPlaceholder": "Digite sua chave secreta 2FA",
+    "currentCode": "Código Atual",
+    "expiresIn": "Expira em:",
+    "seconds": "segundos",
+    "invalidKeyError": "Chave secreta inválida",
+    "copiedSuccess": "Código copiado",
+    "copyError": "Falha ao copiar código"
+  },
+  "emailCodes": {
+    "title": "Códigos de Email",
+    "subtitle": "Recuperar códigos de verificação de endereços de email",
+    "emailLabel": "Endereço de Email",
+    "emailPlaceholder": "Digite o endereço de email",
+    "fetchButton": "Buscar Códigos",
+    "noCodesFound": "Nenhum código encontrado",
+    "loading": "Carregando...",
+    "error": "Ocorreu um erro"
+  },
+  "phoneVerification": {
+    "title": "Verificação de Telefone",
+    "subtitle": "Obter códigos de verificação de números de telefone",
+    "phoneLabel": "Número de Telefone",
+    "phonePlaceholder": "Digite o número de telefone",
+    "fetchButton": "Buscar Código",
+    "noCodeFound": "Nenhum código encontrado",
+    "loading": "Carregando...",
+    "error": "Ocorreu um erro"
+  }
+}

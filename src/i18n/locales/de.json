@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "emailCodes": "E-Mail-Codes",
+    "twoFAGenerator": "2FA-Generator",
+    "phoneVerification": "Telefonverifizierung",
+    "language": "Sprache"
+  },
+  "hero": {
+    "title": "Verifizierungstools-Hub",
+    "subtitle": "Professionelle Verifizierungslösungen für E-Mail-Codes, 2FA-Generierung und Telefonverifizierung"
+  },
+  "services": {
+    "emailCodes": {
+      "title": "E-Mail-Codes",
+      "description": "Verifizierungscodes von E-Mail-Adressen abrufen"
+    },
+    "twoFA": {
+      "title": "2FA-Generator",
+      "description": "TOTP-Codes aus Ihrem geheimen 2FA-Schlüssel generieren"
+    },
+    "phoneVerification": {
+      "title": "Telefonverifizierung",
+      "description": "Verifizierungscodes von Telefonnummern erhalten"
+    }
+  },
+  "footer": {
+    "contactTitle": "Für Kontakt oder Bug-Meldung:",
+    "discord": "Discord:"
+  },
+  "twoFA": {
+    "title": "2FA-Generator",
+    "subtitle": "TOTP-Codes aus Ihrem geheimen 2FA-Schlüssel generieren",
+    "secretKeyLabel": "Geheimer 2FA-Schlüssel",
+    "secretKeyPlaceholder": "Geben Sie Ihren geheimen 2FA-Schlüssel ein",
+    "currentCode": "Aktueller Code",
+    "expiresIn": "Läuft ab in:",
+    "seconds": "Sekunden",
+    "invalidKeyError": "Ungültiger geheimer Schlüssel",
+    "copiedSuccess": "Code kopiert",
+    "copyError": "Fehler beim Kopieren des Codes"
+  },
+  "emailCodes": {
+    "title": "E-Mail-Codes",
+    "subtitle": "Verifizierungscodes von E-Mail-Adressen abrufen",
+    "emailLabel": "E-Mail-Adresse",
+    "emailPlaceholder": "E-Mail-Adresse eingeben",
+    "fetchButton": "Codes Abrufen",
+    "noCodesFound": "Keine Codes gefunden",
+    "loading": "Laden...",
+    "error": "Ein Fehler ist aufgetreten"
+  },
+  "phoneVerification": {
+    "title": "Telefonverifizierung",
+    "subtitle": "Verifizierungscodes von Telefonnummern erhalten",
+    "phoneLabel": "Telefonnummer",
+    "phonePlaceholder": "Telefonnummer eingeben",
+    "fetchButton": "Code Abrufen",
+    "noCodeFound": "Kein Code gefunden",
+    "loading": "Laden...",
+    "error": "Ein Fehler ist aufgetreten"
+  }
+}

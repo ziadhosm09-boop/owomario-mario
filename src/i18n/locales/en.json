@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "home": "Home",
+    "emailCodes": "Email Codes",
+    "twoFAGenerator": "2FA Generator",
+    "phoneVerification": "Phone Verification",
+    "language": "Language"
+  },
+  "hero": {
+    "title": "Verification Tools Hub",
+    "subtitle": "Professional verification solutions for email codes, 2FA generation, and phone verification"
+  },
+  "services": {
+    "emailCodes": {
+      "title": "Email Codes",
+      "description": "Retrieve verification codes from email addresses"
+    },
+    "twoFA": {
+      "title": "2FA Generator",
+      "description": "Generate TOTP codes from your 2FA secret key"
+    },
+    "phoneVerification": {
+      "title": "Phone Verification",
+      "description": "Get verification codes from phone numbers"
+    }
+  },
+  "footer": {
+    "contactTitle": "To Contact Or Report Any Bug:",
+    "discord": "Discord:"
+  },
+  "twoFA": {
+    "title": "2FA Generator",
+    "subtitle": "Generate TOTP codes from your 2FA secret key",
+    "secretKeyLabel": "2FA Secret Key",
+    "secretKeyPlaceholder": "Enter your 2FA secret key",
+    "currentCode": "Current Code",
+    "expiresIn": "Expires in:",
+    "seconds": "seconds",
+    "invalidKeyError": "Invalid secret key",
+    "copiedSuccess": "Code copied",
+    "copyError": "Failed to copy code"
+  },
+  "emailCodes": {
+    "title": "Email Codes",
+    "subtitle": "Retrieve verification codes from email addresses",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "Enter email address",
+    "fetchButton": "Fetch Codes",
+    "noCodesFound": "No codes found",
+    "loading": "Loading...",
+    "error": "An error occurred"
+  },
+  "phoneVerification": {
+    "title": "Phone Verification",
+    "subtitle": "Get verification codes from phone numbers",
+    "phoneLabel": "Phone Number",
+    "phonePlaceholder": "Enter phone number",
+    "fetchButton": "Fetch Code",
+    "noCodeFound": "No code found",
+    "loading": "Loading...",
+    "error": "An error occurred"
+  }
+}

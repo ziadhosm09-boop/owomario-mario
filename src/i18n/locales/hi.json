@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "home": "होम",
+    "emailCodes": "ईमेल कोड",
+    "twoFAGenerator": "2FA जेनरेटर",
+    "phoneVerification": "फोन सत्यापन",
+    "language": "भाषा"
+  },
+  "hero": {
+    "title": "सत्यापन उपकरण केंद्र",
+    "subtitle": "ईमेल कोड, 2FA जनरेशन और फोन सत्यापन के लिए पेशेवर समाधान"
+  },
+  "services": {
+    "emailCodes": {
+      "title": "ईमेल कोड",
+      "description": "ईमेल पतों से सत्यापन कोड प्राप्त करें"
+    },
+    "twoFA": {
+      "title": "2FA जेनरेटर",
+      "description": "अपनी 2FA गुप्त कुंजी से TOTP कोड उत्पन्न करें"
+    },
+    "phoneVerification": {
+      "title": "फोन सत्यापन",
+      "description": "फोन नंबरों से सत्यापन कोड प्राप्त करें"
+    }
+  },
+  "footer": {
+    "contactTitle": "संपर्क करने या बग रिपोर्ट करने के लिए:",
+    "discord": "Discord:"
+  },
+  "twoFA": {
+    "title": "2FA जेनरेटर",
+    "subtitle": "अपनी 2FA गुप्त कुंजी से TOTP कोड उत्पन्न करें",
+    "secretKeyLabel": "2FA गुप्त कुंजी",
+    "secretKeyPlaceholder": "अपनी 2FA गुप्त कुंजी दर्ज करें",
+    "currentCode": "वर्तमान कोड",
+    "expiresIn": "समाप्त होगा:",
+    "seconds": "सेकंड",
+    "invalidKeyError": "अमान्य गुप्त कुंजी",
+    "copiedSuccess": "कोड कॉपी किया गया",
+    "copyError": "कोड कॉपी करने में विफल"
+  },
+  "emailCodes": {
+    "title": "ईमेल कोड",
+    "subtitle": "ईमेल पतों से सत्यापन कोड प्राप्त करें",
+    "emailLabel": "ईमेल पता",
+    "emailPlaceholder": "ईमेल पता दर्ज करें",
+    "fetchButton": "कोड प्राप्त करें",
+    "noCodesFound": "कोई कोड नहीं मिला",
+    "loading": "लोड हो रहा है...",
+    "error": "एक त्रुटि हुई"
+  },
+  "phoneVerification": {
+    "title": "फोन सत्यापन",
+    "subtitle": "फोन नंबरों से सत्यापन कोड प्राप्त करें",
+    "phoneLabel": "फोन नंबर",
+    "phonePlaceholder": "फोन नंबर दर्ज करें",
+    "fetchButton": "कोड प्राप्त करें",
+    "noCodeFound": "कोई कोड नहीं मिला",
+    "loading": "लोड हो रहा है...",
+    "error": "एक त्रुटि हुई"
+  }
+}

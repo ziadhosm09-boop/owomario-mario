@@ -1,0 +1,63 @@
+{
+  "nav": {
+    "home": "Home",
+    "emailCodes": "Codici Email",
+    "twoFAGenerator": "Generatore 2FA",
+    "phoneVerification": "Verifica Telefono",
+    "language": "Lingua"
+  },
+  "hero": {
+    "title": "Hub Strumenti di Verifica",
+    "subtitle": "Soluzioni professionali di verifica per codici email, generazione 2FA e verifica telefonica"
+  },
+  "services": {
+    "emailCodes": {
+      "title": "Codici Email",
+      "description": "Recupera codici di verifica dagli indirizzi email"
+    },
+    "twoFA": {
+      "title": "Generatore 2FA",
+      "description": "Genera codici TOTP dalla tua chiave segreta 2FA"
+    },
+    "phoneVerification": {
+      "title": "Verifica Telefono",
+      "description": "Ottieni codici di verifica dai numeri di telefono"
+    }
+  },
+  "footer": {
+    "contactTitle": "Per Contatto o Segnalare un Bug:",
+    "discord": "Discord:"
+  },
+  "twoFA": {
+    "title": "Generatore 2FA",
+    "subtitle": "Genera codici TOTP dalla tua chiave segreta 2FA",
+    "secretKeyLabel": "Chiave Segreta 2FA",
+    "secretKeyPlaceholder": "Inserisci la tua chiave segreta 2FA",
+    "currentCode": "Codice Attuale",
+    "expiresIn": "Scade tra:",
+    "seconds": "secondi",
+    "invalidKeyError": "Chiave segreta non valida",
+    "copiedSuccess": "Codice copiato",
+    "copyError": "Errore nella copia del codice"
+  },
+  "emailCodes": {
+    "title": "Codici Email",
+    "subtitle": "Recupera codici di verifica dagli indirizzi email",
+    "emailLabel": "Indirizzo Email",
+    "emailPlaceholder": "Inserisci l'indirizzo email",
+    "fetchButton": "Recupera Codici",
+    "noCodesFound": "Nessun codice trovato",
+    "loading": "Caricamento...",
+    "error": "Si è verificato un errore"
+  },
+  "phoneVerification": {
+    "title": "Verifica Telefono",
+    "subtitle": "Ottieni codici di verifica dai numeri di telefono",
+    "phoneLabel": "Numero di Telefono",
+    "phonePlaceholder": "Inserisci il numero di telefono",
+    "fetchButton": "Recupera Codice",
+    "noCodeFound": "Nessun codice trovato",
+    "loading": "Caricamento...",
+    "error": "Si è verificato un errore"
+  }
+}
