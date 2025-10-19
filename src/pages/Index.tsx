@@ -1,4 +1,4 @@
-import { Mail, Key, Smartphone } from "lucide-react";
+import { Mail, Key, Smartphone, Shield } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { ServiceCard } from "@/components/ServiceCard";
 import { Footer } from "@/components/Footer";
@@ -31,6 +31,13 @@ const Index = () => {
       description: t('services.phoneVerification.description'),
       image: phoneIllustration,
       link: "/phone",
+    },
+    {
+      icon: Shield,
+      title: t('services.discordChecker.title'),
+      description: t('services.discordChecker.description'),
+      image: emailIllustration,
+      link: "/discord-checker",
     },
   ];
 

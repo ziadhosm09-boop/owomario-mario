@@ -4,6 +4,7 @@
     "emailCodes": "أكواد البريد الإلكتروني",
     "twoFAGenerator": "مولد 2FA",
     "phoneVerification": "التحقق من الهاتف",
+    "discordChecker": "فاحص Discord Trial",
     "language": "اللغة"
   },
   "hero": {
@@ -22,6 +23,10 @@
     "phoneVerification": {
       "title": "التحقق من الهاتف",
       "description": "الحصول على أكواد التحقق من أرقام الهاتف"
+    },
+    "discordChecker": {
+      "title": "فاحص Discord Trial",
+      "description": "فحص التوكنات للتحقق من وجود Discord Nitro Trial"
     }
   },
   "footer": {
@@ -59,5 +64,28 @@
     "noCodeFound": "لم يتم العثور على كود",
     "loading": "جاري التحميل...",
     "error": "حدث خطأ"
+  },
+  "discordChecker": {
+    "title": "فاحص Discord Nitro Trial",
+    "subtitle": "فحص التوكنات للتحقق من وجود Discord Nitro Trial متاح",
+    "tokensLabel": "التوكنات",
+    "tokensPlaceholder": "أدخل التوكنات (واحد في كل سطر)\nيمكنك استخدام:\ntoken\nأو\nemail:password:token",
+    "tokensHint": "يمكنك إدخال التوكن فقط، أو email:password:token لكل سطر",
+    "threadsLabel": "عدد الثريدات",
+    "selectThreads": "اختر عدد الثريدات",
+    "thread": "ثريد",
+    "threads": "ثريدات",
+    "startCheck": "بدء الفحص",
+    "checking": "جاري الفحص...",
+    "results": "النتائج",
+    "trialsFound": "Trial متاح",
+    "invalid": "توكن غير صحيح",
+    "noTrial": "لا يوجد Trial",
+    "errors": "أخطاء",
+    "download": "تحميل",
+    "checkComplete": "اكتمل الفحص",
+    "emptyTokensError": "يرجى إدخال التوكنات أولاً",
+    "checkError": "حدث خطأ أثناء الفحص",
+    "error": "خطأ"
   }
 }

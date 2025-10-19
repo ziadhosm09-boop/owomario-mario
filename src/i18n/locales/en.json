@@ -4,6 +4,7 @@
     "emailCodes": "Email Codes",
     "twoFAGenerator": "2FA Generator",
     "phoneVerification": "Phone Verification",
+    "discordChecker": "Discord Trial Checker",
     "language": "Language"
   },
   "hero": {
@@ -22,6 +23,10 @@
     "phoneVerification": {
       "title": "Phone Verification",
       "description": "Get verification codes from phone numbers"
+    },
+    "discordChecker": {
+      "title": "Discord Trial Checker",
+      "description": "Check tokens for available Discord Nitro Trial"
     }
   },
   "footer": {
@@ -59,5 +64,28 @@
     "noCodeFound": "No code found",
     "loading": "Loading...",
     "error": "An error occurred"
+  },
+  "discordChecker": {
+    "title": "Discord Nitro Trial Checker",
+    "subtitle": "Check tokens to verify if Discord Nitro Trial is available",
+    "tokensLabel": "Tokens",
+    "tokensPlaceholder": "Enter tokens (one per line)\nYou can use:\ntoken\nor\nemail:password:token",
+    "tokensHint": "You can enter token only, or email:password:token for each line",
+    "threadsLabel": "Number of Threads",
+    "selectThreads": "Select number of threads",
+    "thread": "thread",
+    "threads": "threads",
+    "startCheck": "Start Check",
+    "checking": "Checking...",
+    "results": "Results",
+    "trialsFound": "Trials Available",
+    "invalid": "Invalid Tokens",
+    "noTrial": "No Trial",
+    "errors": "Errors",
+    "download": "Download",
+    "checkComplete": "Check Complete",
+    "emptyTokensError": "Please enter tokens first",
+    "checkError": "An error occurred during check",
+    "error": "Error"
   }
 }

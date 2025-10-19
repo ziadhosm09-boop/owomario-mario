@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import EmailCodes from "./pages/EmailCodes";
 import TwoFAGenerator from "./pages/TwoFAGenerator";
 import PhoneVerification from "./pages/PhoneVerification";
+import DiscordTrialChecker from "./pages/DiscordTrialChecker";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/email" element={<EmailCodes />} />
             <Route path="/2fa" element={<TwoFAGenerator />} />
             <Route path="/phone" element={<PhoneVerification />} />
+            <Route path="/discord-checker" element={<DiscordTrialChecker />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
