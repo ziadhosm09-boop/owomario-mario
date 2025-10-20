@@ -21,6 +21,14 @@ function extractCode(text: string): string | null {
     return match[1];
   }
   
+  // Pattern: Discord security code format
+  const discordPattern = /security code is:\s*(\d{6})/i;
+  match = discordPattern.exec(text);
+  if (match && match[1]) {
+    console.log(`Found Discord security code: ${match[1]}`);
+    return match[1];
+  }
+  
   // Pattern: 6-digit code anywhere in text
   const digitPattern = /\b(\d{6})\b/;
   match = digitPattern.exec(text);
