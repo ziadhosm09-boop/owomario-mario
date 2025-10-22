@@ -3,6 +3,7 @@ import { Footer } from "@/components/Footer";
 import { Key, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
 import { useState, useEffect } from "react";
 import * as OTPAuth from "otpauth";
 import { toast } from "sonner";
@@ -116,16 +117,14 @@ const TwoFAGenerator = () => {
                             )}
                           </Button>
                         </div>
-                        <div className="flex items-center justify-center gap-2">
-                          <div className="text-sm text-muted-foreground">
+                        <div className="flex items-center justify-center gap-3">
+                          <div className="text-sm text-muted-foreground font-medium">
                             {t('twoFA.expiresIn')} {timeRemaining} {t('twoFA.seconds')}
                           </div>
-                          <div className="w-32 h-2 bg-secondary rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-gradient-primary transition-all duration-1000"
-                              style={{ width: `${(timeRemaining / 30) * 100}%` }}
-                            />
-                          </div>
+                          <Progress 
+                            value={(timeRemaining / 30) * 100} 
+                            className="w-32 h-2.5"
+                          />
                         </div>
                       </div>
                     </div>
