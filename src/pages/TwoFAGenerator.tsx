@@ -3,7 +3,7 @@ import { Footer } from "@/components/Footer";
 import { Key, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
+import { LiquidSphere } from "@/components/ui/liquid-sphere";
 import { useState, useEffect } from "react";
 import * as OTPAuth from "otpauth";
 import { toast } from "sonner";
@@ -117,14 +117,14 @@ const TwoFAGenerator = () => {
                             )}
                           </Button>
                         </div>
-                        <div className="flex items-center justify-center gap-3">
+                        <div className="flex flex-col items-center justify-center gap-4">
+                          <LiquidSphere 
+                            value={(timeRemaining / 30) * 100}
+                            className="w-28 h-28"
+                          />
                           <div className="text-sm text-muted-foreground font-medium">
                             {t('twoFA.expiresIn')} {timeRemaining} {t('twoFA.seconds')}
                           </div>
-                          <Progress 
-                            value={(timeRemaining / 30) * 100} 
-                            className="w-32 h-2.5"
-                          />
                         </div>
                       </div>
                     </div>
