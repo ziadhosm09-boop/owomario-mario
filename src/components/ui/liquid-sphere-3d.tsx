@@ -11,95 +11,117 @@ interface LiquidSphere3DProps {
 const LiquidContent = ({ value }: { value: number }) => {
   const liquidRef = useRef<THREE.Mesh>(null);
   
-  // Calculate liquid scale based on value (0-100)
-  const liquidScale = Math.max(0.3, value / 100);
-  const liquidY = -0.5 + (liquidScale * 0.5); // Move liquid down as it decreases
+  // Calculate liquid height (0-100)
+  const fillPercentage = value / 100;
+  const liquidHeight = fillPercentage * 2; // Total height range
+  const liquidY = -1 + liquidHeight; // Start from bottom (-1) and rise up
   
   return (
     <>
       {/* Ambient Light */}
-      <ambientLight intensity={0.5} />
+      <ambientLight intensity={0.8} />
       
-      {/* Main Light */}
-      <directionalLight position={[5, 5, 5]} intensity={1} />
-      <directionalLight position={[-5, -5, -5]} intensity={0.3} />
+      {/* Main Lights */}
+      <directionalLight position={[3, 3, 3]} intensity={1.5} />
+      <directionalLight position={[-3, -3, -3]} intensity={0.5} />
       
-      {/* Point Light for glow effect */}
-      <pointLight position={[0, 0, 2]} intensity={0.8} color="#3b82f6" />
+      {/* Colored Point Lights for glow */}
+      <pointLight position={[0, 1, 2]} intensity={1.5} color="#4f46e5" />
+      <pointLight position={[0, -1, 2]} intensity={1} color="#7c3aed" />
       
-      {/* Environment for reflections */}
-      <Environment preset="city" />
-      
-      {/* Outer Glass Sphere */}
+      {/* Outer Glass Sphere - more visible */}
       <Sphere args={[1.2, 64, 64]} position={[0, 0, 0]}>
         <meshPhysicalMaterial
-          color="#ffffff"
+          color="#e0e7ff"
           transparent
-          opacity={0.15}
-          metalness={0.1}
-          roughness={0.1}
-          transmission={0.95}
-          thickness={0.5}
-          envMapIntensity={1}
+          opacity={0.25}
+          metalness={0.05}
+          roughness={0.05}
+          transmission={0.9}
+          thickness={0.3}
+          envMapIntensity={0.5}
         />
       </Sphere>
       
-      {/* Inner Liquid Sphere */}
+      {/* Inner Liquid - much more visible */}
       <Sphere 
         ref={liquidRef}
         args={[1, 64, 64]} 
         position={[0, liquidY, 0]} 
-        scale={[liquidScale, liquidScale, liquidScale]}
+        scale={[1, fillPercentage * 1.2, 1]}
       >
         <MeshDistortMaterial
-          color="#3b82f6"
-          emissive="#7c3aed"
-          emissiveIntensity={0.3}
-          metalness={0.2}
-          roughness={0.2}
-          distort={0.3}
+          color="#6366f1"
+          emissive="#8b5cf6"
+          emissiveIntensity={0.8}
+          metalness={0.4}
+          roughness={0.3}
+          distort={0.4}
           speed={2}
-          transparent
-          opacity={0.85}
+          transparent={false}
+          opacity={1}
         />
       </Sphere>
       
-      {/* Drip effect when liquid is low */}
-      {value < 30 && (
+      {/* Additional glow layer */}
+      <Sphere 
+        args={[1.05, 32, 32]} 
+        position={[0, liquidY, 0]} 
+        scale={[1, fillPercentage * 1.2, 1]}
+      >
+        <meshStandardMaterial
+          color="#818cf8"
+          emissive="#a78bfa"
+          emissiveIntensity={0.5}
+          transparent
+          opacity={0.3}
+        />
+      </Sphere>
+      
+      {/* Drip effects when liquid is low */}
+      {value < 40 && (
         <>
-          <Sphere args={[0.08, 16, 16]} position={[0, -1.3, 0]}>
+          <Sphere args={[0.12, 16, 16]} position={[0, -1.35, 0]}>
             <meshStandardMaterial
-              color="#3b82f6"
-              emissive="#7c3aed"
-              emissiveIntensity={0.5}
-              metalness={0.3}
-              transparent
-              opacity={0.8}
+              color="#6366f1"
+              emissive="#8b5cf6"
+              emissiveIntensity={1}
+              metalness={0.5}
             />
           </Sphere>
-          <Sphere args={[0.05, 16, 16]} position={[0.15, -1.5, 0.1]}>
-            <meshStandardMaterial
-              color="#3b82f6"
-              emissive="#7c3aed"
-              emissiveIntensity={0.5}
-              metalness={0.3}
-              transparent
-              opacity={0.6}
-            />
-          </Sphere>
+          {value < 25 && (
+            <>
+              <Sphere args={[0.08, 16, 16]} position={[0.2, -1.5, 0.1]}>
+                <meshStandardMaterial
+                  color="#6366f1"
+                  emissive="#8b5cf6"
+                  emissiveIntensity={1}
+                  metalness={0.5}
+                />
+              </Sphere>
+              <Sphere args={[0.06, 16, 16]} position={[-0.15, -1.6, -0.1]}>
+                <meshStandardMaterial
+                  color="#6366f1"
+                  emissive="#8b5cf6"
+                  emissiveIntensity={0.8}
+                  metalness={0.5}
+                />
+              </Sphere>
+            </>
+          )}
         </>
       )}
       
-      {/* Crack/Leak effect at bottom */}
-      {value < 50 && (
-        <mesh position={[0, -1.2, 0]} rotation={[0, 0, 0]}>
-          <cylinderGeometry args={[0.02, 0.05, 0.3, 8]} />
+      {/* Crack stream when leaking */}
+      {value < 60 && (
+        <mesh position={[0, -1.2 + (liquidY * 0.5), 0]} rotation={[0, 0, 0]}>
+          <cylinderGeometry args={[0.03, 0.06, Math.max(0.2, liquidY + 1.2), 8]} />
           <meshStandardMaterial
-            color="#1e40af"
-            emissive="#3b82f6"
-            emissiveIntensity={0.8}
+            color="#4f46e5"
+            emissive="#7c3aed"
+            emissiveIntensity={1.2}
             transparent
-            opacity={0.7}
+            opacity={0.8}
           />
         </mesh>
       )}
