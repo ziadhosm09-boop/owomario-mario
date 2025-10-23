@@ -1,4 +1,4 @@
-import { Shield, Mail, Key, Smartphone } from "lucide-react";
+import { Shield, Mail, Key, Smartphone, Code } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -57,6 +57,15 @@ export const Navbar = () => {
             >
               <Smartphone className="w-4 h-4" />
               {t('nav.phoneVerification')}
+            </Link>
+            <Link 
+              to="/api" 
+              className={`flex items-center gap-2 transition-colors ${
+                isActive('/api') ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <Code className="w-4 h-4" />
+              API
             </Link>
           </div>
           
