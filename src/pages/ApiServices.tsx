@@ -28,12 +28,8 @@ export default function ApiServices() {
       description: "جلب آخر كود OTP من Amazon وحذف الرسالة",
       method: "POST",
       endpoint: `${baseUrl}/get-otp`,
-      requestBody: JSON.stringify({
-        accounts: [
-          "email@hotmail.com:password:refreshToken:clientId"
-        ]
-      }, null, 2),
-      responseExample: "529149\n123456"
+      requestBody: "email@hotmail.com:password:refreshToken:clientId",
+      responseExample: "529149"
     },
     {
       id: "email-codes",

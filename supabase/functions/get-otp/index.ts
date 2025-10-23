@@ -149,18 +149,19 @@ serve(async (req) => {
   }
 
   try {
-    const { accounts } = await req.json();
-
-    if (!accounts || !Array.isArray(accounts)) {
+    const body = await req.text();
+    
+    if (!body || body.trim() === '') {
       return new Response("", { 
         headers: corsHeaders,
         status: 400 
       });
     }
 
+    const lines = body.trim().split('\n').filter(line => line.trim() !== '');
     const results: string[] = [];
     
-    for (const line of accounts) {
+    for (const line of lines) {
       const accountData = parseAccountLine(line);
       if (!accountData) continue;
 
