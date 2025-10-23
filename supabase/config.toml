@@ -1,1 +1,22 @@
 project_id = "isqbduxgxroysrojtseq"
+
+[functions.get-otp]
+verify_jwt = false
+
+[functions.fetch-email-codes]
+verify_jwt = false
+
+[functions.generate-2fa]
+verify_jwt = false
+
+[functions.fetch-phone-code]
+verify_jwt = false
+
+[functions.check-discord-trials]
+verify_jwt = false
+
+[functions.get-discord-link]
+verify_jwt = false
+
+[functions.discord-link]
+verify_jwt = false
