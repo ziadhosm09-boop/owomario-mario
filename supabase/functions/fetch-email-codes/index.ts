@@ -75,49 +75,53 @@ async function fetchInboxMessages(accessToken: string) {
   return data.value || [];
 }
 
-async function fetchAllMessages(accessToken: string) {
-  console.log("Fetching all messages from account...");
-  let allMessages: any[] = [];
-  let nextLink = "https://graph.microsoft.com/v1.0/me/messages?$top=100&$select=id,subject,from,receivedDateTime,bodyPreview,body,isRead&$orderby=receivedDateTime desc";
+async function fetchLatestAmazonMessage(accessToken: string) {
+  console.log("Fetching latest Amazon message from account...");
+  const url = "https://graph.microsoft.com/v1.0/me/messages?$top=50&$select=id,subject,from,receivedDateTime,bodyPreview,body,isRead&$orderby=receivedDateTime desc";
   
-  while (nextLink) {
-    const response = await fetch(nextLink, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-        "Prefer": "outlook.body-content-type=\"text\""
-      },
-    });
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+      "Prefer": "outlook.body-content-type=\"text\""
+    },
+  });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`Failed to fetch messages. Status: ${response.status}, Error: ${errorText}`);
-      throw new Error(`Failed to fetch messages: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const messages = data.value || [];
-    
-    const amazonMessages = messages.filter((msg: any) => {
-      const fromAddress = msg.from?.emailAddress?.address?.toLowerCase() || "";
-      const subject = msg.subject?.toLowerCase() || "";
-      return fromAddress.includes("amazon") || subject.includes("amazon");
-    });
-    
-    allMessages = allMessages.concat(amazonMessages);
-    nextLink = data['@odata.nextLink'] || null;
-    
-    console.log(`Fetched ${amazonMessages.length} Amazon messages from ${messages.length} total (accumulated: ${allMessages.length})`);
-    
-    if (nextLink) {
-      await sleep(100);
-    }
-    
-    if (allMessages.length >= 100) break;
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error(`Failed to fetch messages. Status: ${response.status}, Error: ${errorText}`);
+    throw new Error(`Failed to fetch messages: ${response.status}`);
   }
+
+  const data = await response.json();
+  const messages = data.value || [];
   
-  console.log(`Total Amazon messages fetched: ${allMessages.length}`);
-  return allMessages;
+  const amazonMessage = messages.find((msg: any) => {
+    const fromAddress = msg.from?.emailAddress?.address?.toLowerCase() || "";
+    const subject = msg.subject?.toLowerCase() || "";
+    return fromAddress.includes("amazon") || subject.includes("amazon");
+  });
+  
+  console.log(`Found latest Amazon message: ${amazonMessage ? amazonMessage.subject : 'None'}`);
+  return amazonMessage;
+}
+
+async function deleteMessage(accessToken: string, messageId: string) {
+  const url = `https://graph.microsoft.com/v1.0/me/messages/${encodeURIComponent(messageId)}`;
+  
+  const response = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to delete message ${messageId}: ${response.status}`);
+  }
+
+  console.log(`Successfully deleted message: ${messageId}`);
+  return true;
 }
 
 function extractAllOTPs(text: string): string[] {
@@ -307,50 +311,48 @@ async function processAccount(account: AccountData, mode: string = 'amazon') {
       }
     }
     
-    console.log(`Obtained access token for ${account.email}. Fetching Amazon messages...`);
+    console.log(`Obtained access token for ${account.email}. Fetching latest Amazon message...`);
     
-    let messages = [];
     try {
-      messages = await fetchAllMessages(accessToken);
-      console.log(`Fetched ${messages.length} Amazon messages for ${account.email}`);
+      const latestMessage = await fetchLatestAmazonMessage(accessToken);
       
-      const messagesWithOTPs = messages.map(msg => {
-        const bodyContent = msg.body?.content || "";
-        const bodyText = htmlToText(bodyContent);
-        const preview = msg.bodyPreview || "";
-        const subject = msg.subject || "";
-        
-        const fullText = `${subject} ${preview} ${bodyText}`;
-        
-        const allCodes = extractAllOTPs(fullText);
-        
-        console.log(`Message "${subject}" - Found codes:`, allCodes);
-        
-        return {
-          id: msg.id,
-          subject: msg.subject,
-          from: msg.from,
-          receivedDateTime: msg.receivedDateTime,
-          bodyPreview: msg.bodyPreview,
-          isRead: msg.isRead,
-          codes: allCodes,
-          otp: allCodes.length > 0 ? allCodes[0] : null
-        };
-      });
+      if (!latestMessage) {
+        return { email: account.email, error: "لم يتم العثور على رسائل Amazon" };
+      }
       
-      const messagesWithCodes = messagesWithOTPs.filter(msg => msg.codes && msg.codes.length > 0);
+      console.log(`Found latest Amazon message for ${account.email}: ${latestMessage.subject}`);
       
-      console.log(`Found ${messagesWithCodes.length} messages with verification codes`);
+      const bodyContent = latestMessage.body?.content || "";
+      const bodyText = htmlToText(bodyContent);
+      const preview = latestMessage.bodyPreview || "";
+      const subject = latestMessage.subject || "";
+      
+      const fullText = `${subject} ${preview} ${bodyText}`;
+      const allCodes = extractAllOTPs(fullText);
+      
+      console.log(`Message "${subject}" - Found codes:`, allCodes);
+      
+      if (allCodes.length === 0) {
+        return { email: account.email, error: "لم يتم العثور على كود في آخر رسالة" };
+      }
+      
+      const latestCode = allCodes[0];
+      
+      try {
+        await deleteMessage(accessToken, latestMessage.id);
+        console.log(`Deleted message after extracting code for ${account.email}`);
+      } catch (deleteError: any) {
+        console.warn(`Failed to delete message: ${deleteError.message}`);
+      }
       
       return { 
         email: account.email,
-        messages: messagesWithCodes,
-        totalMessages: messages.length,
-        totalWithCodes: messagesWithCodes.length
+        otp: latestCode,
+        messageDeleted: true
       };
     } catch (e: any) {
-      console.warn(`Failed to fetch Amazon messages: ${e.message}`);
-      return { email: account.email, error: e.message, messages: [] };
+      console.warn(`Failed to fetch Amazon message: ${e.message}`);
+      return { email: account.email, error: e.message };
     }
   } catch (error: any) {
     console.error(`Error processing ${account.email}:`, error);
@@ -399,14 +401,10 @@ serve(async (req) => {
           });
         }
       } else {
-        const otpCodes = result.messages ? result.messages.flatMap((msg: any) => msg.codes || []) : [];
-        
-        if (otpCodes.length > 0) {
-          otpCodes.forEach(code => {
-            results.push({
-              email: result.email,
-              otp: code
-            });
+        if (result.otp) {
+          results.push({
+            email: result.email,
+            otp: result.otp
           });
         } else {
           results.push({
