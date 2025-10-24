@@ -4,6 +4,13 @@ import { Copy, Check } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface ApiEndpoint {
   id: string;
@@ -14,6 +21,35 @@ interface ApiEndpoint {
   requestBody: string;
   responseExample: string;
 }
+
+const generateCurl = (endpoint: string, requestBody: string, method: string) => {
+  return `curl -X ${method} "${endpoint}" \\
+  -H "Content-Type: application/json" \\
+  -d '${requestBody}'`;
+};
+
+const generateJavaScript = (endpoint: string, requestBody: string) => {
+  return `fetch("${endpoint}", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: '${requestBody}'
+})
+  .then(response => response.text())
+  .then(data => console.log(data))
+  .catch(error => console.error("Error:", error));`;
+};
+
+const generatePython = (endpoint: string, requestBody: string) => {
+  return `import requests
+
+url = "${endpoint}"
+data = '${requestBody}'
+
+response = requests.post(url, data=data, headers={"Content-Type": "application/json"})
+print(response.text)`;
+};
 
 export default function ApiServices() {
   const { t } = useTranslation();
@@ -139,96 +175,172 @@ export default function ApiServices() {
             </p>
           </div>
 
-          <div className="grid gap-6">
+          <Accordion type="single" collapsible className="space-y-4">
             {apis.map((api) => (
-              <Card key={api.id} className="p-6 backdrop-blur-sm bg-card/50 border-primary/20 hover:border-primary/40 transition-all">
-                <div className="space-y-4">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="text-2xl font-bold text-foreground mb-2">
-                        {api.title}
-                      </h3>
-                      <p className="text-muted-foreground">{api.description}</p>
+              <AccordionItem key={api.id} value={api.id} className="border-none">
+                <Card className="backdrop-blur-sm bg-card/50 border-primary/20 hover:border-primary/40 transition-all overflow-hidden">
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                    <div className="flex items-center justify-between w-full pr-4">
+                      <div className="text-left">
+                        <h3 className="text-xl font-bold text-foreground mb-1">
+                          {api.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">{api.description}</p>
+                      </div>
+                      <span className="px-3 py-1 bg-primary/20 text-primary rounded-md text-sm font-semibold">
+                        {api.method}
+                      </span>
                     </div>
-                    <span className="px-3 py-1 bg-primary/20 text-primary rounded-md text-sm font-semibold">
-                      {api.method}
-                    </span>
-                  </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-6">
+                    <div className="space-y-4 pt-4">
+                      <div>
+                        <label className="text-sm font-semibold text-foreground mb-2 block">
+                          Endpoint
+                        </label>
+                        <div className="flex items-center gap-2 bg-muted/50 p-3 rounded-lg border border-border">
+                          <code className="flex-1 text-sm text-foreground break-all">
+                            {api.endpoint}
+                          </code>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleCopy(api.endpoint, `${api.id}-endpoint`)}
+                            className="shrink-0"
+                          >
+                            {copiedId === `${api.id}-endpoint` ? (
+                              <Check className="h-4 w-4 text-green-500" />
+                            ) : (
+                              <Copy className="h-4 w-4" />
+                            )}
+                          </Button>
+                        </div>
+                      </div>
 
-                  <div className="space-y-3">
-                    <div>
-                      <label className="text-sm font-semibold text-foreground mb-2 block">
-                        Endpoint
-                      </label>
-                      <div className="flex items-center gap-2 bg-muted/50 p-3 rounded-lg border border-border">
-                        <code className="flex-1 text-sm text-foreground break-all">
-                          {api.endpoint}
-                        </code>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleCopy(api.endpoint, `${api.id}-endpoint`)}
-                          className="shrink-0"
-                        >
-                          {copiedId === `${api.id}-endpoint` ? (
-                            <Check className="h-4 w-4 text-green-500" />
-                          ) : (
-                            <Copy className="h-4 w-4" />
-                          )}
-                        </Button>
+                      <div>
+                        <label className="text-sm font-semibold text-foreground mb-2 block">
+                          أمثلة الاستخدام
+                        </label>
+                        <Tabs defaultValue="curl" className="w-full">
+                          <TabsList className="grid w-full grid-cols-3">
+                            <TabsTrigger value="curl">cURL</TabsTrigger>
+                            <TabsTrigger value="javascript">JavaScript</TabsTrigger>
+                            <TabsTrigger value="python">Python</TabsTrigger>
+                          </TabsList>
+                          
+                          <TabsContent value="curl" className="mt-2">
+                            <div className="relative bg-muted/50 p-4 rounded-lg border border-border">
+                              <pre className="text-sm text-foreground overflow-x-auto whitespace-pre-wrap">
+                                {generateCurl(api.endpoint, api.requestBody, api.method)}
+                              </pre>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleCopy(generateCurl(api.endpoint, api.requestBody, api.method), `${api.id}-curl`)}
+                                className="absolute top-2 right-2"
+                              >
+                                {copiedId === `${api.id}-curl` ? (
+                                  <Check className="h-4 w-4 text-green-500" />
+                                ) : (
+                                  <Copy className="h-4 w-4" />
+                                )}
+                              </Button>
+                            </div>
+                          </TabsContent>
+
+                          <TabsContent value="javascript" className="mt-2">
+                            <div className="relative bg-muted/50 p-4 rounded-lg border border-border">
+                              <pre className="text-sm text-foreground overflow-x-auto whitespace-pre-wrap">
+                                {generateJavaScript(api.endpoint, api.requestBody)}
+                              </pre>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleCopy(generateJavaScript(api.endpoint, api.requestBody), `${api.id}-js`)}
+                                className="absolute top-2 right-2"
+                              >
+                                {copiedId === `${api.id}-js` ? (
+                                  <Check className="h-4 w-4 text-green-500" />
+                                ) : (
+                                  <Copy className="h-4 w-4" />
+                                )}
+                              </Button>
+                            </div>
+                          </TabsContent>
+
+                          <TabsContent value="python" className="mt-2">
+                            <div className="relative bg-muted/50 p-4 rounded-lg border border-border">
+                              <pre className="text-sm text-foreground overflow-x-auto whitespace-pre-wrap">
+                                {generatePython(api.endpoint, api.requestBody)}
+                              </pre>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleCopy(generatePython(api.endpoint, api.requestBody), `${api.id}-python`)}
+                                className="absolute top-2 right-2"
+                              >
+                                {copiedId === `${api.id}-python` ? (
+                                  <Check className="h-4 w-4 text-green-500" />
+                                ) : (
+                                  <Copy className="h-4 w-4" />
+                                )}
+                              </Button>
+                            </div>
+                          </TabsContent>
+                        </Tabs>
+                      </div>
+
+                      <div>
+                        <label className="text-sm font-semibold text-foreground mb-2 block">
+                          Request Body
+                        </label>
+                        <div className="relative bg-muted/50 p-3 rounded-lg border border-border">
+                          <pre className="text-sm text-foreground overflow-x-auto">
+                            {api.requestBody}
+                          </pre>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleCopy(api.requestBody, `${api.id}-request`)}
+                            className="absolute top-2 right-2"
+                          >
+                            {copiedId === `${api.id}-request` ? (
+                              <Check className="h-4 w-4 text-green-500" />
+                            ) : (
+                              <Copy className="h-4 w-4" />
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="text-sm font-semibold text-foreground mb-2 block">
+                          Response Example
+                        </label>
+                        <div className="relative bg-muted/50 p-3 rounded-lg border border-border">
+                          <pre className="text-sm text-foreground overflow-x-auto">
+                            {api.responseExample}
+                          </pre>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleCopy(api.responseExample, `${api.id}-response`)}
+                            className="absolute top-2 right-2"
+                          >
+                            {copiedId === `${api.id}-response` ? (
+                              <Check className="h-4 w-4 text-green-500" />
+                            ) : (
+                              <Copy className="h-4 w-4" />
+                            )}
+                          </Button>
+                        </div>
                       </div>
                     </div>
-
-                    <div>
-                      <label className="text-sm font-semibold text-foreground mb-2 block">
-                        Request Body
-                      </label>
-                      <div className="relative bg-muted/50 p-3 rounded-lg border border-border">
-                        <pre className="text-sm text-foreground overflow-x-auto">
-                          {api.requestBody}
-                        </pre>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleCopy(api.requestBody, `${api.id}-request`)}
-                          className="absolute top-2 right-2"
-                        >
-                          {copiedId === `${api.id}-request` ? (
-                            <Check className="h-4 w-4 text-green-500" />
-                          ) : (
-                            <Copy className="h-4 w-4" />
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="text-sm font-semibold text-foreground mb-2 block">
-                        Response Example
-                      </label>
-                      <div className="relative bg-muted/50 p-3 rounded-lg border border-border">
-                        <pre className="text-sm text-foreground overflow-x-auto">
-                          {api.responseExample}
-                        </pre>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleCopy(api.responseExample, `${api.id}-response`)}
-                          className="absolute top-2 right-2"
-                        >
-                          {copiedId === `${api.id}-response` ? (
-                            <Check className="h-4 w-4 text-green-500" />
-                          ) : (
-                            <Copy className="h-4 w-4" />
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Card>
+                  </AccordionContent>
+                </Card>
+              </AccordionItem>
             ))}
-          </div>
+          </Accordion>
 
           <div className="mt-8 p-6 bg-primary/10 rounded-lg border border-primary/20">
             <h3 className="text-lg font-semibold mb-2 text-foreground">ملاحظات مهمة:</h3>
