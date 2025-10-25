@@ -11,6 +11,7 @@ import TwoFAGenerator from "./pages/TwoFAGenerator";
 import PhoneVerification from "./pages/PhoneVerification";
 import DiscordTrialChecker from "./pages/DiscordTrialChecker";
 import ApiServices from "./pages/ApiServices";
+import QRCodeGenerator from "./pages/QRCodeGenerator";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/phone" element={<PhoneVerification />} />
             <Route path="/discord-checker" element={<DiscordTrialChecker />} />
             <Route path="/api" element={<ApiServices />} />
+            <Route path="/qr-code" element={<QRCodeGenerator />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

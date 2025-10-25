@@ -5,6 +5,8 @@
     "twoFAGenerator": "2FA Generator",
     "phoneVerification": "Phone Verification",
     "discordChecker": "Discord Trial Checker",
+    "apiServices": "API Services",
+    "qrCode": "QR Code Generator",
     "language": "Language"
   },
   "hero": {
@@ -27,6 +29,14 @@
     "discordChecker": {
       "title": "Discord Trial Checker",
       "description": "Check tokens for available Discord Nitro Trial"
+    },
+    "apiServices": {
+      "title": "API Services",
+      "description": "Use our APIs to integrate with your application"
+    },
+    "qrCode": {
+      "title": "QR Code Generator",
+      "description": "Create fully customizable QR codes"
     }
   },
   "footer": {
@@ -87,5 +97,21 @@
     "emptyTokensError": "Please enter tokens first",
     "checkError": "An error occurred during check",
     "error": "Error"
+  },
+  "qrCode": {
+    "title": "QR Code Generator",
+    "subtitle": "Create fully customizable QR codes",
+    "urlLabel": "URL or Text",
+    "urlPlaceholder": "Enter URL or text",
+    "fgColorLabel": "QR Color",
+    "bgColorLabel": "Background Color",
+    "sizeLabel": "Size",
+    "logoLabel": "Logo (Optional)",
+    "removeLogo": "Remove Logo",
+    "downloadButton": "Download QR Code",
+    "preview": "Preview",
+    "emptyPreview": "Enter a URL or text to see QR Code",
+    "emptyUrlError": "Please enter a URL or text first",
+    "downloadSuccess": "QR Code downloaded successfully"
   }
 }

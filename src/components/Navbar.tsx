@@ -1,4 +1,4 @@
-import { Shield, Mail, Key, Smartphone, Code } from "lucide-react";
+import { Shield, Mail, Key, Smartphone, Code, QrCode } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -65,7 +65,16 @@ export const Navbar = () => {
               }`}
             >
               <Code className="w-4 h-4" />
-              API
+              {t('nav.apiServices')}
+            </Link>
+            <Link 
+              to="/qr-code" 
+              className={`flex items-center gap-2 transition-colors ${
+                isActive('/qr-code') ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <QrCode className="w-4 h-4" />
+              {t('nav.qrCode')}
             </Link>
           </div>
           

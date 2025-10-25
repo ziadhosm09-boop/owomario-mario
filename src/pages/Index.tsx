@@ -1,4 +1,4 @@
-import { Mail, Key, Smartphone, Shield } from "lucide-react";
+import { Mail, Key, Smartphone, Shield, Code, QrCode } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { ServiceCard } from "@/components/ServiceCard";
 import { Footer } from "@/components/Footer";
@@ -7,6 +7,8 @@ import emailIllustration from "@/assets/email-illustration.jpg";
 import tfaIllustration from "@/assets/2fa-illustration.jpg";
 import phoneIllustration from "@/assets/phone-illustration.jpg";
 import discordCheckerIllustration from "@/assets/discord-checker-illustration.jpg";
+import apiServicesIllustration from "@/assets/api-services-illustration.jpg";
+import qrCodeIllustration from "@/assets/qr-code-illustration.jpg";
 
 const Index = () => {
   const { t } = useTranslation();
@@ -39,6 +41,20 @@ const Index = () => {
       description: t('services.discordChecker.description'),
       image: discordCheckerIllustration,
       link: "/discord-checker",
+    },
+    {
+      icon: Code,
+      title: t('services.apiServices.title'),
+      description: t('services.apiServices.description'),
+      image: apiServicesIllustration,
+      link: "/api",
+    },
+    {
+      icon: QrCode,
+      title: t('services.qrCode.title'),
+      description: t('services.qrCode.description'),
+      image: qrCodeIllustration,
+      link: "/qr-code",
     },
   ];
 

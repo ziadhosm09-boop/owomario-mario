@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Copy, Check } from "lucide-react";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -163,17 +165,20 @@ export default function ApiServices() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              API Services
-            </h1>
-            <p className="text-muted-foreground text-lg">
-              استخدم الـ APIs التالية للتكامل مع خدماتنا
-            </p>
-          </div>
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      
+      <main className="flex-1 pt-24 pb-12 bg-gradient-to-br from-background via-background to-primary/5">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-12">
+              <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                API Services
+              </h1>
+              <p className="text-muted-foreground text-lg">
+                استخدم الـ APIs التالية للتكامل مع خدماتنا
+              </p>
+            </div>
 
           <Accordion type="single" collapsible className="space-y-4">
             {apis.map((api) => (
@@ -351,8 +356,11 @@ export default function ApiServices() {
               <li>API الخاص بـ Amazon OTP يحذف الرسالة تلقائياً بعد قراءتها</li>
             </ul>
           </div>
+          </div>
         </div>
-      </div>
+      </main>
+      
+      <Footer />
     </div>
   );
 }
