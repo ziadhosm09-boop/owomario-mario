@@ -112,6 +112,10 @@
     "preview": "معاينة",
     "emptyPreview": "أدخل رابط أو نص لرؤية QR Code",
     "emptyUrlError": "يرجى إدخال رابط أو نص أولاً",
-    "downloadSuccess": "تم تحميل QR Code بنجاح"
+    "downloadSuccess": "تم تحميل QR Code بنجاح",
+    "addNewQR": "إضافة QR Code جديد",
+    "addedNewQR": "تم إضافة QR Code جديد",
+    "removedQR": "تم حذف QR Code",
+    "cannotRemoveLast": "لا يمكن حذف آخر QR Code"
   }
 }

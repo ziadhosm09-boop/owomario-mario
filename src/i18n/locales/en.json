@@ -112,6 +112,10 @@
     "preview": "Preview",
     "emptyPreview": "Enter a URL or text to see QR Code",
     "emptyUrlError": "Please enter a URL or text first",
-    "downloadSuccess": "QR Code downloaded successfully"
+    "downloadSuccess": "QR Code downloaded successfully",
+    "addNewQR": "Add New QR Code",
+    "addedNewQR": "New QR Code added",
+    "removedQR": "QR Code removed",
+    "cannotRemoveLast": "Cannot remove the last QR Code"
   }
 }
