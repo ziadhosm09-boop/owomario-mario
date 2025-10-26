@@ -108,6 +108,7 @@
     "sizeLabel": "الحجم",
     "logoLabel": "شعار (اختياري)",
     "removeLogo": "إزالة الشعار",
+    "logoRadiusLabel": "انحناء أطراف الشعار",
     "downloadButton": "تحميل QR Code",
     "preview": "معاينة",
     "emptyPreview": "أدخل رابط أو نص لرؤية QR Code",

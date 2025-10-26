@@ -108,6 +108,7 @@
     "sizeLabel": "Size",
     "logoLabel": "Logo (Optional)",
     "removeLogo": "Remove Logo",
+    "logoRadiusLabel": "Logo Corner Radius",
     "downloadButton": "Download QR Code",
     "preview": "Preview",
     "emptyPreview": "Enter a URL or text to see QR Code",
