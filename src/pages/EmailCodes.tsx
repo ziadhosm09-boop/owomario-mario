@@ -1,6 +1,6 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { Mail, Copy, Check, Loader2 } from "lucide-react";
+import { Mail, Copy, Check, Loader2, ExternalLink } from "lucide-react";
 
 const AmazonIcon = () => (
   <svg viewBox="0 0 48 48" className="w-8 h-8" fill="currentColor">
@@ -233,19 +233,33 @@ const EmailCodes = () => {
                                 <div className={`${result.link ? 'text-sm' : 'text-2xl'} font-bold font-mono tracking-wider break-all`}>
                                   {result.otp || result.link}
                                 </div>
-                                <Button
-                                  type="button"
-                                  onClick={() => handleCopy(result.otp || result.link!, index)}
-                                  size="icon"
-                                  variant="outline"
-                                  className="h-8 w-8 shrink-0"
-                                >
-                                  {copiedIndex === index ? (
-                                    <Check className="w-4 h-4 text-green-500" />
-                                  ) : (
-                                    <Copy className="w-4 h-4" />
+                                <div className="flex items-center gap-2">
+                                  <Button
+                                    type="button"
+                                    onClick={() => handleCopy(result.otp || result.link!, index)}
+                                    size="icon"
+                                    variant="outline"
+                                    className="h-8 w-8 shrink-0"
+                                  >
+                                    {copiedIndex === index ? (
+                                      <Check className="w-4 h-4 text-green-500" />
+                                    ) : (
+                                      <Copy className="w-4 h-4" />
+                                    )}
+                                  </Button>
+                                  {result.link && (
+                                    <Button
+                                      type="button"
+                                      onClick={() => window.open(result.link, '_blank')}
+                                      size="icon"
+                                      variant="outline"
+                                      className="h-8 w-8 shrink-0"
+                                      title="Open link in new tab"
+                                    >
+                                      <ExternalLink className="w-4 h-4" />
+                                    </Button>
                                   )}
-                                </Button>
+                                </div>
                               </div>
                             ) : (
                               <div className="text-sm text-red-500">
