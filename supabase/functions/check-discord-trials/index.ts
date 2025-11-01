@@ -168,7 +168,7 @@ serve(async (req) => {
       );
     }
 
-    const count = Math.min(Math.max(threadCount || 1, 1), 3);
+    const count = Math.min(Math.max(threadCount || 1, 1), 10);
 
     const results = await processTokens(tokens, count);
 

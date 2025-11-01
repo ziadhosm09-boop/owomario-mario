@@ -146,6 +146,13 @@ const DiscordTrialChecker = () => {
                       <SelectItem value="1">1 {t("discordChecker.thread")}</SelectItem>
                       <SelectItem value="2">2 {t("discordChecker.threads")}</SelectItem>
                       <SelectItem value="3">3 {t("discordChecker.threads")}</SelectItem>
+                      <SelectItem value="4">4 {t("discordChecker.threads")}</SelectItem>
+                      <SelectItem value="5">5 {t("discordChecker.threads")}</SelectItem>
+                      <SelectItem value="6">6 {t("discordChecker.threads")}</SelectItem>
+                      <SelectItem value="7">7 {t("discordChecker.threads")}</SelectItem>
+                      <SelectItem value="8">8 {t("discordChecker.threads")}</SelectItem>
+                      <SelectItem value="9">9 {t("discordChecker.threads")}</SelectItem>
+                      <SelectItem value="10">10 {t("discordChecker.threads")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
