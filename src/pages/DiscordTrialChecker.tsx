@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Shield, Loader2 } from "lucide-react";
+import { Shield, Loader2, Eye, Copy, Check } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,18 @@ const DiscordTrialChecker = () => {
     no_trial: string[];
     errors: string[];
   } | null>(null);
+  const [showList, setShowList] = useState<{
+    trial: boolean;
+    invalid: boolean;
+    no_trial: boolean;
+    errors: boolean;
+  }>({
+    trial: false,
+    invalid: false,
+    no_trial: false,
+    errors: false,
+  });
+  const [copiedItem, setCopiedItem] = useState<string | null>(null);
 
   const handleCheck = async () => {
     if (!tokens.trim()) {
@@ -90,6 +102,31 @@ const DiscordTrialChecker = () => {
     a.download = `${type}.txt`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const toggleList = (type: keyof typeof showList) => {
+    setShowList(prev => ({
+      ...prev,
+      [type]: !prev[type]
+    }));
+  };
+
+  const copyItem = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedItem(text);
+      setTimeout(() => setCopiedItem(null), 2000);
+      toast({
+        title: t("discordChecker.copied"),
+        description: t("discordChecker.copiedSuccess"),
+      });
+    } catch (error) {
+      toast({
+        title: t("discordChecker.error"),
+        description: t("discordChecker.copyError"),
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -190,14 +227,53 @@ const DiscordTrialChecker = () => {
                       </span>
                     </div>
                     {results.trial.length > 0 && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => downloadResults("trial")}
-                        className="w-full mt-2"
-                      >
-                        {t("discordChecker.download")}
-                      </Button>
+                      <>
+                        <div className="flex gap-2 mt-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => downloadResults("trial")}
+                            className="flex-1"
+                          >
+                            {t("discordChecker.download")}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => toggleList("trial")}
+                            className="flex-1"
+                          >
+                            <Eye className="w-4 h-4 mr-2" />
+                            {t("discordChecker.showList")}
+                          </Button>
+                        </div>
+                        {showList.trial && (
+                          <div className="mt-4 space-y-2 max-h-[300px] overflow-y-auto">
+                            {results.trial.map((item, idx) => (
+                              <div
+                                key={idx}
+                                className="flex items-center gap-2 p-2 rounded bg-background/50 border"
+                              >
+                                <span className="flex-1 text-xs font-mono break-all">
+                                  {item}
+                                </span>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-8 w-8 shrink-0"
+                                  onClick={() => copyItem(item)}
+                                >
+                                  {copiedItem === item ? (
+                                    <Check className="w-4 h-4 text-success" />
+                                  ) : (
+                                    <Copy className="w-4 h-4" />
+                                  )}
+                                </Button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
 
@@ -211,14 +287,53 @@ const DiscordTrialChecker = () => {
                       </span>
                     </div>
                     {results.invalid.length > 0 && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => downloadResults("invalid")}
-                        className="w-full mt-2"
-                      >
-                        {t("discordChecker.download")}
-                      </Button>
+                      <>
+                        <div className="flex gap-2 mt-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => downloadResults("invalid")}
+                            className="flex-1"
+                          >
+                            {t("discordChecker.download")}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => toggleList("invalid")}
+                            className="flex-1"
+                          >
+                            <Eye className="w-4 h-4 mr-2" />
+                            {t("discordChecker.showList")}
+                          </Button>
+                        </div>
+                        {showList.invalid && (
+                          <div className="mt-4 space-y-2 max-h-[300px] overflow-y-auto">
+                            {results.invalid.map((item, idx) => (
+                              <div
+                                key={idx}
+                                className="flex items-center gap-2 p-2 rounded bg-background/50 border"
+                              >
+                                <span className="flex-1 text-xs font-mono break-all">
+                                  {item}
+                                </span>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-8 w-8 shrink-0"
+                                  onClick={() => copyItem(item)}
+                                >
+                                  {copiedItem === item ? (
+                                    <Check className="w-4 h-4 text-success" />
+                                  ) : (
+                                    <Copy className="w-4 h-4" />
+                                  )}
+                                </Button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
 
@@ -232,14 +347,53 @@ const DiscordTrialChecker = () => {
                       </span>
                     </div>
                     {results.no_trial.length > 0 && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => downloadResults("no_trial")}
-                        className="w-full mt-2"
-                      >
-                        {t("discordChecker.download")}
-                      </Button>
+                      <>
+                        <div className="flex gap-2 mt-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => downloadResults("no_trial")}
+                            className="flex-1"
+                          >
+                            {t("discordChecker.download")}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => toggleList("no_trial")}
+                            className="flex-1"
+                          >
+                            <Eye className="w-4 h-4 mr-2" />
+                            {t("discordChecker.showList")}
+                          </Button>
+                        </div>
+                        {showList.no_trial && (
+                          <div className="mt-4 space-y-2 max-h-[300px] overflow-y-auto">
+                            {results.no_trial.map((item, idx) => (
+                              <div
+                                key={idx}
+                                className="flex items-center gap-2 p-2 rounded bg-background/50 border"
+                              >
+                                <span className="flex-1 text-xs font-mono break-all">
+                                  {item}
+                                </span>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-8 w-8 shrink-0"
+                                  onClick={() => copyItem(item)}
+                                >
+                                  {copiedItem === item ? (
+                                    <Check className="w-4 h-4 text-success" />
+                                  ) : (
+                                    <Copy className="w-4 h-4" />
+                                  )}
+                                </Button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
 
@@ -253,14 +407,53 @@ const DiscordTrialChecker = () => {
                       </span>
                     </div>
                     {results.errors.length > 0 && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => downloadResults("errors")}
-                        className="w-full mt-2"
-                      >
-                        {t("discordChecker.download")}
-                      </Button>
+                      <>
+                        <div className="flex gap-2 mt-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => downloadResults("errors")}
+                            className="flex-1"
+                          >
+                            {t("discordChecker.download")}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => toggleList("errors")}
+                            className="flex-1"
+                          >
+                            <Eye className="w-4 h-4 mr-2" />
+                            {t("discordChecker.showList")}
+                          </Button>
+                        </div>
+                        {showList.errors && (
+                          <div className="mt-4 space-y-2 max-h-[300px] overflow-y-auto">
+                            {results.errors.map((item, idx) => (
+                              <div
+                                key={idx}
+                                className="flex items-center gap-2 p-2 rounded bg-background/50 border"
+                              >
+                                <span className="flex-1 text-xs font-mono break-all">
+                                  {item}
+                                </span>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-8 w-8 shrink-0"
+                                  onClick={() => copyItem(item)}
+                                >
+                                  {copiedItem === item ? (
+                                    <Check className="w-4 h-4 text-success" />
+                                  ) : (
+                                    <Copy className="w-4 h-4" />
+                                  )}
+                                </Button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>
