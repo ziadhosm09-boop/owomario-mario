@@ -230,8 +230,15 @@ const EmailCodes = () => {
                             </div>
                             {result.otp || result.link ? (
                               <div className="flex items-center gap-3">
-                                <div className={`${result.link ? 'text-sm' : 'text-2xl'} font-bold font-mono tracking-wider break-all`}>
-                                  {result.otp || result.link}
+                                <div className={`${result.link ? 'text-base' : 'text-2xl'} font-bold ${result.link ? '' : 'font-mono tracking-wider'}`}>
+                                  {result.link ? (
+                                    <span className="text-primary flex items-center gap-2">
+                                      <ExternalLink className="w-4 h-4" />
+                                      Discord Verify Link
+                                    </span>
+                                  ) : (
+                                    result.otp
+                                  )}
                                 </div>
                                 <div className="flex items-center gap-2">
                                   <Button
@@ -251,12 +258,10 @@ const EmailCodes = () => {
                                     <Button
                                       type="button"
                                       onClick={() => window.open(result.link, '_blank')}
-                                      size="icon"
-                                      variant="outline"
-                                      className="h-8 w-8 shrink-0"
-                                      title="Open link in new tab"
+                                      variant="default"
+                                      className="h-8 px-3"
                                     >
-                                      <ExternalLink className="w-4 h-4" />
+                                      Open Link
                                     </Button>
                                   )}
                                 </div>
