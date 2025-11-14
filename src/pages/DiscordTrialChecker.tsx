@@ -55,9 +55,14 @@ const DiscordTrialChecker = () => {
     setResults(null);
 
     try {
+      const extractToken = (line: string): string => {
+        const match = line.match(/"([^"]+)"/);
+        return match ? match[1] : line.trim();
+      };
+
       const tokenList = tokens
         .split("\n")
-        .map((t) => t.trim())
+        .map((t) => extractToken(t))
         .filter((t) => t);
 
       const { data, error } = await supabase.functions.invoke(
