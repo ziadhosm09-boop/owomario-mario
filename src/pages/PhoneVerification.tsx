@@ -23,12 +23,46 @@ const PhoneVerification = () => {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
+    // Clear previous interval
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
+    // Start checking if there are phones in the list
+    const phones = parsePhoneList(phoneList);
+    if (phones.length === 0) {
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+
+    // Initial check
+    const checkAllPhones = async () => {
+      const currentPhones = parsePhoneList(phoneList);
+      if (currentPhones.length === 0) {
+        setLoading(false);
+        return;
+      }
+
+      for (const { phone, apiUrl } of currentPhones) {
+        await fetchCodeForPhone(phone, apiUrl);
+      }
+    };
+
+    // First check immediately
+    checkAllPhones();
+
+    // Then check every 5 seconds
+    intervalRef.current = setInterval(checkAllPhones, 5000);
+
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
-  }, []);
+  }, [phoneList]);
 
   const parsePhoneList = (text: string): Array<{ phone: string; apiUrl: string }> => {
     const lines = text.split('\n').filter(line => line.trim());
@@ -75,52 +109,6 @@ const PhoneVerification = () => {
     }
   };
 
-  const handleStart = async () => {
-    if (!phoneList.trim()) {
-      toast.error("Please enter phone numbers and API URLs");
-      return;
-    }
-
-    const phones = parsePhoneList(phoneList);
-    if (phones.length === 0) {
-      toast.error("Invalid format. Use: phone----apiurl or phone|apiurl");
-      return;
-    }
-
-    setLoading(true);
-    setResults([]);
-
-    // Check all phones every 5 seconds
-    intervalRef.current = setInterval(async () => {
-      const currentPhones = parsePhoneList(phoneList);
-      if (currentPhones.length === 0) {
-        if (intervalRef.current) {
-          clearInterval(intervalRef.current);
-        }
-        setLoading(false);
-        toast.success("All codes received!");
-        return;
-      }
-
-      for (const { phone, apiUrl } of currentPhones) {
-        await fetchCodeForPhone(phone, apiUrl);
-      }
-    }, 5000);
-
-    // Initial check
-    for (const { phone, apiUrl } of phones) {
-      await fetchCodeForPhone(phone, apiUrl);
-    }
-  };
-
-  const handleStop = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-    setLoading(false);
-    toast.info("Stopped checking for codes");
-  };
 
   const handleCopy = async (code: string, index: number) => {
     try {
@@ -169,37 +157,15 @@ const PhoneVerification = () => {
                     value={phoneList}
                     onChange={(e) => setPhoneList(e.target.value)}
                     className="font-mono min-h-[200px]"
-                    disabled={loading}
                   />
                 </div>
 
-                <div className="flex gap-3">
-                  <Button 
-                    type="button"
-                    onClick={handleStart}
-                    className="flex-1"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Checking...
-                      </>
-                    ) : (
-                      'Start Checking'
-                    )}
-                  </Button>
-                  
-                  {loading && (
-                    <Button 
-                      type="button"
-                      onClick={handleStop}
-                      variant="destructive"
-                    >
-                      Stop
-                    </Button>
-                  )}
-                </div>
+                {loading && (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Checking for codes...
+                  </div>
+                )}
               </div>
 
               {results.length > 0 && (
