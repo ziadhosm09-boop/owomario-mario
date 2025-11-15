@@ -55,15 +55,25 @@ const DiscordTrialChecker = () => {
     setResults(null);
 
     try {
-      const extractToken = (line: string): string => {
-        const match = line.match(/"([^"]+)"/);
-        return match ? match[1] : line.trim();
+      const extractToken = (line: string): { token: string; fullLine: string } => {
+        const trimmedLine = line.trim();
+        const match = trimmedLine.match(/"([^"]+)"/);
+        const token = match ? match[1] : trimmedLine;
+        return { token, fullLine: trimmedLine };
       };
 
-      const tokenList = tokens
+      const tokenData = tokens
         .split("\n")
         .map((t) => extractToken(t))
-        .filter((t) => t);
+        .filter((t) => t.token);
+
+      // Create mapping from token to full line
+      const tokenMap = new Map<string, string>();
+      tokenData.forEach(({ token, fullLine }) => {
+        tokenMap.set(token, fullLine);
+      });
+
+      const tokenList = tokenData.map(t => t.token);
 
       const { data, error } = await supabase.functions.invoke(
         "check-discord-trials",
@@ -77,7 +87,15 @@ const DiscordTrialChecker = () => {
 
       if (error) throw error;
 
-      setResults(data.results);
+      // Map tokens back to full lines
+      const mappedResults = {
+        trial: data.results.trial.map((token: string) => tokenMap.get(token) || token),
+        invalid: data.results.invalid.map((token: string) => tokenMap.get(token) || token),
+        no_trial: data.results.no_trial.map((token: string) => tokenMap.get(token) || token),
+        errors: data.results.errors.map((token: string) => tokenMap.get(token) || token),
+      };
+
+      setResults(mappedResults);
       
       toast({
         title: t("discordChecker.checkComplete"),
