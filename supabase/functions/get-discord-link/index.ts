@@ -178,13 +178,16 @@ serve(async (req) => {
     let email: string, refreshToken: string, clientId: string;
 
     // Check if account data is in single line format (email:password:refreshToken:clientId)
-    if (body.account && typeof body.account === 'string') {
-      const parts = body.account.split(':');
+    // Support both 'account' and 'email' fields for single line format
+    const accountData = body.account || body.email;
+    
+    if (accountData && typeof accountData === 'string' && accountData.includes(':')) {
+      const parts = accountData.split(':');
       if (parts.length < 4) {
         return new Response(
           JSON.stringify({ 
             success: false,
-            error: "Invalid account format. Use: email:password:refreshToken:clientId" 
+            error: "Invalid format. Use: email:password:refreshToken:clientId" 
           }), 
           {
             status: 400,
@@ -206,7 +209,7 @@ serve(async (req) => {
         return new Response(
           JSON.stringify({ 
             success: false,
-            error: "Missing required data. Provide 'account' as email:password:refreshToken:clientId or separate fields" 
+            error: "Missing required data. Provide 'account' or 'email' as email:password:refreshToken:clientId or separate fields" 
           }), 
           {
             status: 400,
