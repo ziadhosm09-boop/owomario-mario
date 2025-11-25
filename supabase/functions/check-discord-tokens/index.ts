@@ -55,11 +55,27 @@ async function checkToken(line: string): Promise<{
     return new Promise((resolve) => {
       let heartbeatInterval: number;
       let timeoutId: number;
+      let isResolved = false;
+
+      const safeResolve = (result: { type: "working" | "email_locked" | "phone_locked" | "invalid" | "error"; data: string }) => {
+        if (!isResolved) {
+          isResolved = true;
+          clearTimeout(timeoutId);
+          if (heartbeatInterval) clearInterval(heartbeatInterval);
+          try {
+            if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
+              ws.close();
+            }
+          } catch (e) {
+            // Ignore close errors
+          }
+          resolve(result);
+        }
+      };
 
       // Set a timeout for the entire operation
       timeoutId = setTimeout(() => {
-        ws.close();
-        resolve({ type: "error", data: `${fullLine} | Connection Timeout` });
+        safeResolve({ type: "error", data: `${fullLine} | Connection Timeout` });
       }, 10000);
 
       ws.onopen = () => {
@@ -67,101 +83,109 @@ async function checkToken(line: string): Promise<{
       };
 
       ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        
-        // Handle Hello message
-        if (data.op === 10) {
-          const heartbeatInterval_ms = data.d.heartbeat_interval;
+        try {
+          const data = JSON.parse(event.data);
           
-          // Start heartbeat
-          heartbeatInterval = setInterval(() => {
-            if (ws.readyState === WebSocket.OPEN) {
-              ws.send(JSON.stringify({ op: 1, d: null }));
-            }
-          }, heartbeatInterval_ms);
-
-          // Send Identify payload
-          const identifyPayload = {
-            op: 2,
-            d: {
-              token: token,
-              capabilities: 16381,
-              properties: {
-                os: "Windows",
-                browser: "Chrome",
-                device: "",
-                system_locale: "en-US",
-                browser_user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
-                browser_version: "138.0.0.0",
-                os_version: "10",
-                referrer: "https://discord.com/",
-                referring_domain: "discord.com",
-                referrer_current: "https://discord.com/",
-                referring_domain_current: "discord.com",
-                release_channel: "stable",
-                client_build_number: 317140,
-                client_event_source: null
-              },
-              presence: {
-                status: "online",
-                since: 0,
-                activities: [],
-                afk: false
-              },
-              compress: false,
-              client_state: {
-                guild_versions: {},
-                highest_last_message_id: "0",
-                read_state_version: 0,
-                user_guild_settings_version: -1,
-                user_settings_version: -1,
-                private_channels_version: "0",
-                api_code_version: 0
+          // Handle Hello message
+          if (data.op === 10) {
+            const heartbeatInterval_ms = data.d.heartbeat_interval;
+            
+            // Start heartbeat
+            heartbeatInterval = setInterval(() => {
+              if (ws.readyState === WebSocket.OPEN) {
+                try {
+                  ws.send(JSON.stringify({ op: 1, d: null }));
+                } catch (e) {
+                  safeResolve({ type: "error", data: `${fullLine} | Heartbeat Error` });
+                }
               }
+            }, heartbeatInterval_ms);
+
+            // Send Identify payload
+            const identifyPayload = {
+              op: 2,
+              d: {
+                token: token,
+                capabilities: 16381,
+                properties: {
+                  os: "Windows",
+                  browser: "Chrome",
+                  device: "",
+                  system_locale: "en-US",
+                  browser_user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+                  browser_version: "138.0.0.0",
+                  os_version: "10",
+                  referrer: "https://discord.com/",
+                  referring_domain: "discord.com",
+                  referrer_current: "https://discord.com/",
+                  referring_domain_current: "discord.com",
+                  release_channel: "stable",
+                  client_build_number: 317140,
+                  client_event_source: null
+                },
+                presence: {
+                  status: "online",
+                  since: 0,
+                  activities: [],
+                  afk: false
+                },
+                compress: false,
+                client_state: {
+                  guild_versions: {},
+                  highest_last_message_id: "0",
+                  read_state_version: 0,
+                  user_guild_settings_version: -1,
+                  user_settings_version: -1,
+                  private_channels_version: "0",
+                  api_code_version: 0
+                }
+              }
+            };
+            
+            try {
+              ws.send(JSON.stringify(identifyPayload));
+            } catch (e) {
+              safeResolve({ type: "error", data: `${fullLine} | Send Error` });
             }
-          };
+          }
           
-          ws.send(JSON.stringify(identifyPayload));
+          // Handle Ready or other responses
+          if (data.op === 0 && data.t === "READY") {
+            const required_action = data.d?.required_action;
+            
+            if (required_action === "REQUIRE_VERIFIED_PHONE") {
+              safeResolve({ type: "phone_locked", data: fullLine });
+            } else if (required_action === "REQUIRE_VERIFIED_EMAIL") {
+              safeResolve({ type: "email_locked", data: fullLine });
+            } else if (!required_action || required_action === "AGREEMENTS") {
+              safeResolve({ type: "working", data: fullLine });
+            } else {
+              safeResolve({ type: "invalid", data: `${fullLine} | ${required_action}` });
+            }
+          }
+          
+          // Handle Invalid Session (op 9)
+          if (data.op === 9) {
+            safeResolve({ type: "invalid", data: `${fullLine} | Invalid Session` });
+          }
+        } catch (e) {
+          safeResolve({ type: "error", data: `${fullLine} | Parse Error` });
         }
-        
-        // Handle Ready or other responses
-        if (data.op === 0 && data.t === "READY") {
-          clearTimeout(timeoutId);
-          clearInterval(heartbeatInterval);
-          ws.close();
-          
-          const required_action = data.d?.required_action;
-          
-          if (required_action === "REQUIRE_VERIFIED_PHONE") {
-            resolve({ type: "phone_locked", data: fullLine });
-          } else if (required_action === "REQUIRE_VERIFIED_EMAIL") {
-            resolve({ type: "email_locked", data: fullLine });
-          } else if (!required_action || required_action === "AGREEMENTS") {
-            resolve({ type: "working", data: fullLine });
+      };
+
+      ws.onerror = () => {
+        safeResolve({ type: "error", data: `${fullLine} | Connection Error` });
+      };
+
+      ws.onclose = (event) => {
+        // If closed before resolution, treat as error
+        if (!isResolved) {
+          if (event.code === 4004) {
+            safeResolve({ type: "invalid", data: `${fullLine} | Authentication Failed` });
           } else {
-            resolve({ type: "invalid", data: `${fullLine} | ${required_action}` });
+            safeResolve({ type: "error", data: `${fullLine} | Connection Closed (${event.code})` });
           }
         }
-        
-        // Handle Invalid Session (op 9)
-        if (data.op === 9) {
-          clearTimeout(timeoutId);
-          clearInterval(heartbeatInterval);
-          ws.close();
-          resolve({ type: "invalid", data: `${fullLine} | Invalid Session` });
-        }
-      };
-
-      ws.onerror = (error) => {
-        clearTimeout(timeoutId);
-        if (heartbeatInterval) clearInterval(heartbeatInterval);
-        console.error(`[ERROR] WebSocket error:`, error);
-        resolve({ type: "error", data: `${fullLine} | Connection Error` });
-      };
-
-      ws.onclose = () => {
-        clearTimeout(timeoutId);
-        if (heartbeatInterval) clearInterval(heartbeatInterval);
       };
     });
   } catch (error) {
