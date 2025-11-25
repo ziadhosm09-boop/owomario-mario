@@ -5,6 +5,7 @@
     "twoFAGenerator": "2FA Generator",
     "phoneVerification": "Phone Verification",
     "discordChecker": "Discord Trial Checker",
+    "tokensChecker": "Tokens Checker",
     "apiServices": "API Services",
     "qrCode": "QR Code Generator",
     "language": "Language"
@@ -29,6 +30,10 @@
     "discordChecker": {
       "title": "Discord Trial Checker",
       "description": "Check tokens for available Discord Nitro Trial"
+    },
+    "tokensChecker": {
+      "title": "Discord Tokens Checker",
+      "description": "Check Discord tokens status and validity"
     },
     "apiServices": {
       "title": "API Services",
