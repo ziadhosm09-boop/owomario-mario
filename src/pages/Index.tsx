@@ -1,4 +1,4 @@
-import { Mail, Key, Smartphone, Shield, Code, QrCode } from "lucide-react";
+import { Mail, Key, Smartphone, Shield, Code, QrCode, CheckCircle } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { ServiceCard } from "@/components/ServiceCard";
 import { Footer } from "@/components/Footer";
@@ -7,6 +7,7 @@ import emailIllustration from "@/assets/email-illustration.jpg";
 import tfaIllustration from "@/assets/2fa-illustration.jpg";
 import phoneIllustration from "@/assets/phone-illustration.jpg";
 import discordCheckerIllustration from "@/assets/discord-checker-illustration.jpg";
+import tokensCheckerIllustration from "@/assets/tokens-checker-illustration.jpg";
 import apiServicesIllustration from "@/assets/api-services-illustration.jpg";
 import qrCodeIllustration from "@/assets/qr-code-illustration.jpg";
 
@@ -41,6 +42,13 @@ const Index = () => {
       description: t('services.discordChecker.description'),
       image: discordCheckerIllustration,
       link: "/discord-checker",
+    },
+    {
+      icon: CheckCircle,
+      title: t('services.tokensChecker.title'),
+      description: t('services.tokensChecker.description'),
+      image: tokensCheckerIllustration,
+      link: "/tokens-checker",
     },
     {
       icon: Code,

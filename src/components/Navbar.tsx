@@ -1,4 +1,4 @@
-import { Shield, Mail, Key, Smartphone, Code, QrCode } from "lucide-react";
+import { Shield, Mail, Key, Smartphone, Code, QrCode, CheckCircle } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -57,6 +57,15 @@ export const Navbar = () => {
             >
               <Smartphone className="w-4 h-4" />
               {t('nav.phoneVerification')}
+            </Link>
+            <Link 
+              to="/tokens-checker" 
+              className={`flex items-center gap-2 transition-colors ${
+                isActive('/tokens-checker') ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <CheckCircle className="w-4 h-4" />
+              {t('nav.tokensChecker')}
             </Link>
             <Link 
               to="/api" 

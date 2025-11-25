@@ -5,6 +5,7 @@
     "twoFAGenerator": "مولد 2FA",
     "phoneVerification": "التحقق من الهاتف",
     "discordChecker": "فاحص Discord Trial",
+    "tokensChecker": "فاحص التوكنات",
     "apiServices": "خدمات API",
     "qrCode": "مولد QR Code",
     "language": "اللغة"
@@ -29,6 +30,10 @@
     "discordChecker": {
       "title": "فاحص Discord Trial",
       "description": "فحص التوكنات للتحقق من وجود Discord Nitro Trial"
+    },
+    "tokensChecker": {
+      "title": "فاحص توكنات ديسكورد",
+      "description": "فحص حالة وصلاحية توكنات ديسكورد"
     },
     "apiServices": {
       "title": "خدمات API",
