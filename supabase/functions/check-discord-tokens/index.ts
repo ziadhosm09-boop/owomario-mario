@@ -23,20 +23,19 @@ interface TokenCheckResult {
 function parseToken(line: string): { token: string; fullLine: string } {
   const trimmed = line.trim();
   
-  // Handle email:pass:"token" format (remove quotes from token)
+  // If contains ':', check if it's email:pass:token format
   if (trimmed.includes(':')) {
     const parts = trimmed.split(':');
+    // email:pass:token or email:pass:"token" format
     if (parts.length >= 3) {
       let token = parts[parts.length - 1];
-      // Remove quotes if present
+      // Remove quotes if present (handles email:pass:"token")
       token = token.replace(/^["']|["']$/g, '');
       return { token, fullLine: trimmed };
-    } else if (parts.length === 1) {
-      return { token: parts[0], fullLine: trimmed };
     }
   }
   
-  // Plain token format
+  // Plain token format (no colons)
   return { token: trimmed, fullLine: trimmed };
 }
 
