@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Loader2, CheckCircle, XCircle, Mail, Smartphone, AlertCircle, Download, Eye, Copy } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Progress } from "@/components/ui/progress";
 
 interface TokenCheckResults {
   working: string[];
@@ -28,6 +29,9 @@ const TokensChecker = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogContent, setDialogContent] = useState<string[]>([]);
   const [dialogTitle, setDialogTitle] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [currentBatch, setCurrentBatch] = useState(0);
+  const [totalBatches, setTotalBatches] = useState(0);
   const { toast } = useToast();
 
   const handleCheck = async () => {
@@ -53,15 +57,51 @@ const TokensChecker = () => {
 
     setIsChecking(true);
     setResults(null);
+    setProgress(0);
+
+    // Process in batches of 500 tokens max per request to avoid timeouts
+    const BATCH_SIZE = 500;
+    const batches = [];
+    for (let i = 0; i < tokenList.length; i += BATCH_SIZE) {
+      batches.push(tokenList.slice(i, i + BATCH_SIZE));
+    }
+
+    setTotalBatches(batches.length);
+
+    const combinedResults: TokenCheckResults = {
+      working: [],
+      email_locked: [],
+      phone_locked: [],
+      invalid: [],
+      errors: [],
+    };
 
     try {
-      const { data, error } = await supabase.functions.invoke("check-discord-tokens", {
-        body: { tokens: tokenList, threadCount },
-      });
+      for (let i = 0; i < batches.length; i++) {
+        setCurrentBatch(i + 1);
+        const batch = batches[i];
 
-      if (error) throw error;
+        const { data, error } = await supabase.functions.invoke("check-discord-tokens", {
+          body: { tokens: batch, threadCount },
+        });
 
-      setResults(data.results);
+        if (error) throw error;
+
+        // Combine results from this batch
+        combinedResults.working.push(...data.results.working);
+        combinedResults.email_locked.push(...data.results.email_locked);
+        combinedResults.phone_locked.push(...data.results.phone_locked);
+        combinedResults.invalid.push(...data.results.invalid);
+        combinedResults.errors.push(...data.results.errors);
+
+        // Update progress
+        const progressPercent = ((i + 1) / batches.length) * 100;
+        setProgress(progressPercent);
+
+        // Update results in real-time
+        setResults({ ...combinedResults });
+      }
+
       toast({
         title: "Check Complete",
         description: `Checked ${tokenList.length} tokens successfully`,
@@ -75,6 +115,9 @@ const TokensChecker = () => {
       });
     } finally {
       setIsChecking(false);
+      setProgress(0);
+      setCurrentBatch(0);
+      setTotalBatches(0);
     }
   };
 
@@ -157,6 +200,16 @@ const TokensChecker = () => {
                   />
                 </div>
 
+                {isChecking && (
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                      <span>Processing batch {currentBatch} of {totalBatches}</span>
+                      <span>{Math.round(progress)}%</span>
+                    </div>
+                    <Progress value={progress} className="w-full" />
+                  </div>
+                )}
+
                 <Button
                   onClick={handleCheck}
                   disabled={isChecking}
@@ -165,7 +218,7 @@ const TokensChecker = () => {
                   {isChecking ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Checking...
+                      Checking... ({currentBatch}/{totalBatches})
                     </>
                   ) : (
                     "Check Tokens"
