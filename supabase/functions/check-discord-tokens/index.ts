@@ -254,7 +254,7 @@ serve(async (req) => {
       );
     }
 
-    const count = Math.min(Math.max(threadCount || 1, 1), 50);
+    const count = Math.max(threadCount || 1, 1);
 
     console.log(`[INFO] Starting token check for ${tokens.length} tokens with ${count} threads`);
 
