@@ -146,12 +146,12 @@ const TokensChecker = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="threadCount">Thread Count (1-10)</Label>
+                  <Label htmlFor="threadCount">Thread Count (1-50)</Label>
                   <Input
                     id="threadCount"
                     type="number"
                     min="1"
-                    max="10"
+                    max="50"
                     value={threadCount}
                     onChange={(e) => setThreadCount(Number(e.target.value))}
                     className="max-w-xs"
