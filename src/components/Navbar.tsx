@@ -1,4 +1,4 @@
-import { Shield, Mail, Key, Smartphone, Code, QrCode, CheckCircle } from "lucide-react";
+import { Shield, Mail, Key, Smartphone, Code, QrCode, CheckCircle, Unlock } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -66,6 +66,15 @@ export const Navbar = () => {
             >
               <CheckCircle className="w-4 h-4" />
               {t('nav.tokensChecker')}
+            </Link>
+            <Link 
+              to="/discord-unlocker" 
+              className={`flex items-center gap-2 transition-colors ${
+                isActive('/discord-unlocker') ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <Unlock className="w-4 h-4" />
+              Discord Unlocker
             </Link>
             <Link 
               to="/api" 

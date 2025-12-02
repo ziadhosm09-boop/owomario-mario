@@ -13,6 +13,7 @@ import DiscordTrialChecker from "./pages/DiscordTrialChecker";
 import TokensChecker from "./pages/TokensChecker";
 import ApiServices from "./pages/ApiServices";
 import QRCodeGenerator from "./pages/QRCodeGenerator";
+import DiscordUnlocker from "./pages/DiscordUnlocker";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/tokens-checker" element={<TokensChecker />} />
             <Route path="/api" element={<ApiServices />} />
             <Route path="/qr-code" element={<QRCodeGenerator />} />
+            <Route path="/discord-unlocker" element={<DiscordUnlocker />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
