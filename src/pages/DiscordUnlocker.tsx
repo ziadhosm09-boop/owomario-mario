@@ -42,6 +42,8 @@ const DiscordUnlocker = () => {
     setEmailResult(null);
 
     try {
+      console.log("Calling fetch-unlock-email with:", { provider, apiKey: apiKey.substring(0, 10) + "..." });
+      
       const { data, error } = await supabase.functions.invoke("fetch-unlock-email", {
         body: { 
           provider,
@@ -50,9 +52,14 @@ const DiscordUnlocker = () => {
         },
       });
 
-      if (error) throw error;
+      console.log("Response from edge function:", data);
 
-      if (data.error) {
+      if (error) {
+        console.error("Supabase error:", error);
+        throw error;
+      }
+
+      if (data?.error) {
         throw new Error(data.error);
       }
 
@@ -60,31 +67,38 @@ const DiscordUnlocker = () => {
       let emailData = "";
       
       if (provider === "ballmail") {
-        // ballmail returns JSON
-        if (data.data && typeof data.data === "object") {
-          if (Array.isArray(data.data)) {
-            emailData = data.data.map((item: any) => {
-              if (typeof item === "string") return item;
-              // Format: email:pass:refreshToken:clientId
-              return `${item.email || ""}:${item.password || item.pass || ""}:${item.refreshToken || item.refresh_token || ""}:${item.clientId || item.client_id || ""}`;
-            }).join("\n");
-          } else if (data.data.email) {
-            emailData = `${data.data.email}:${data.data.password || data.data.pass || ""}:${data.data.refreshToken || data.data.refresh_token || ""}:${data.data.clientId || data.data.client_id || ""}`;
-          } else {
-            emailData = JSON.stringify(data.data, null, 2);
-          }
+        // ballmail returns: { success: true, data: { success: true, data: [...] } }
+        const responseData = data?.data?.data || data?.data;
+        console.log("Ballmail responseData:", responseData);
+        
+        if (Array.isArray(responseData)) {
+          emailData = responseData.map((item: any) => {
+            // Format: login:password:refresh_token:service_id
+            const login = item.login || item.username || item.email || "";
+            const password = item.password || "";
+            const refreshToken = item.refresh_token || "";
+            const serviceId = item.service_id || "";
+            return `${login}:${password}:${refreshToken}:${serviceId}`;
+          }).join("\n");
+        } else if (responseData && typeof responseData === "object") {
+          const login = responseData.login || responseData.username || responseData.email || "";
+          const password = responseData.password || "";
+          const refreshToken = responseData.refresh_token || "";
+          const serviceId = responseData.service_id || "";
+          emailData = `${login}:${password}:${refreshToken}:${serviceId}`;
         } else {
-          emailData = String(data.data);
+          emailData = JSON.stringify(data, null, 2);
         }
       } else if (provider === "beemail") {
-        // beemail returns text format
-        if (data.data?.raw) {
-          emailData = data.data.raw;
+        // beemail returns raw text format: email:pass:refresh_token:service_id
+        if (data?.data?.raw) {
+          emailData = data.data.raw.trim();
         } else {
-          emailData = JSON.stringify(data.data, null, 2);
+          emailData = JSON.stringify(data, null, 2);
         }
       }
       
+      console.log("Final emailData:", emailData);
       setEmailResult(emailData);
       
       toast({
@@ -236,7 +250,7 @@ const DiscordUnlocker = () => {
                       </pre>
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      Format: email:password:refreshToken:clientId
+                      Format: login:password:refresh_token:service_id
                     </p>
                   </div>
                 )}
