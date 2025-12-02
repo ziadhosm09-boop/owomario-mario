@@ -5,14 +5,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Unlock, Key, Mail, Loader2 } from "lucide-react";
+import { Unlock, Key, Mail, Loader2, Copy, CheckCircle } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const DiscordUnlocker = () => {
   const [token, setToken] = useState("");
   const [apiKey, setApiKey] = useState("");
+  const [provider, setProvider] = useState<"ballmail" | "beemail">("ballmail");
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState<string | null>(null);
+  const [emailResult, setEmailResult] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
   const handleUnlock = async () => {
@@ -35,25 +39,57 @@ const DiscordUnlocker = () => {
     }
 
     setIsLoading(true);
-    setResult(null);
+    setEmailResult(null);
 
     try {
-      // Fetch email from ballmail API
-      const emailResponse = await fetch(
-        `https://ballmail.shop/api/account/any?api_key=${encodeURIComponent(apiKey)}&count=1`
-      );
+      const { data, error } = await supabase.functions.invoke("fetch-unlock-email", {
+        body: { 
+          provider,
+          apiKey: apiKey.trim(),
+          count: 1
+        },
+      });
 
-      if (!emailResponse.ok) {
-        throw new Error("Failed to fetch email from API");
+      if (error) throw error;
+
+      if (data.error) {
+        throw new Error(data.error);
       }
 
-      const emailData = await emailResponse.json();
+      // Parse the response based on provider
+      let emailData = "";
       
-      setResult(JSON.stringify(emailData, null, 2));
+      if (provider === "ballmail") {
+        // ballmail returns JSON
+        if (data.data && typeof data.data === "object") {
+          if (Array.isArray(data.data)) {
+            emailData = data.data.map((item: any) => {
+              if (typeof item === "string") return item;
+              // Format: email:pass:refreshToken:clientId
+              return `${item.email || ""}:${item.password || item.pass || ""}:${item.refreshToken || item.refresh_token || ""}:${item.clientId || item.client_id || ""}`;
+            }).join("\n");
+          } else if (data.data.email) {
+            emailData = `${data.data.email}:${data.data.password || data.data.pass || ""}:${data.data.refreshToken || data.data.refresh_token || ""}:${data.data.clientId || data.data.client_id || ""}`;
+          } else {
+            emailData = JSON.stringify(data.data, null, 2);
+          }
+        } else {
+          emailData = String(data.data);
+        }
+      } else if (provider === "beemail") {
+        // beemail returns text format
+        if (data.data?.raw) {
+          emailData = data.data.raw;
+        } else {
+          emailData = JSON.stringify(data.data, null, 2);
+        }
+      }
+      
+      setEmailResult(emailData);
       
       toast({
         title: "Success",
-        description: "Email fetched successfully",
+        description: `Email fetched from ${provider}`,
       });
     } catch (error: any) {
       console.error("Unlocker error:", error);
@@ -64,6 +100,18 @@ const DiscordUnlocker = () => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const copyToClipboard = () => {
+    if (emailResult) {
+      navigator.clipboard.writeText(emailResult);
+      setCopied(true);
+      toast({
+        title: "Copied!",
+        description: "Email data copied to clipboard",
+      });
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
@@ -111,21 +159,34 @@ const DiscordUnlocker = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="apiKey" className="flex items-center gap-2">
+                  <Label htmlFor="provider" className="flex items-center gap-2">
                     <Mail className="w-4 h-4" />
-                    Email API Key
+                    Email Provider
+                  </Label>
+                  <Select value={provider} onValueChange={(v) => setProvider(v as "ballmail" | "beemail")}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select provider" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="ballmail">Ballmail.shop</SelectItem>
+                      <SelectItem value="beemail">Bee-mails.com</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="apiKey" className="flex items-center gap-2">
+                    <Key className="w-4 h-4" />
+                    API Key ({provider === "ballmail" ? "ballmail.shop" : "bee-mails.com"})
                   </Label>
                   <Input
                     id="apiKey"
                     type="password"
-                    placeholder="Enter your ballmail.shop API key..."
+                    placeholder={`Enter your ${provider} API key...`}
                     value={apiKey}
                     onChange={(e) => setApiKey(e.target.value)}
                     className="font-mono"
                   />
-                  <p className="text-xs text-muted-foreground">
-                    API from ballmail.shop
-                  </p>
                 </div>
 
                 <Button
@@ -136,7 +197,7 @@ const DiscordUnlocker = () => {
                   {isLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Processing...
+                      Fetching Email...
                     </>
                   ) : (
                     <>
@@ -146,12 +207,37 @@ const DiscordUnlocker = () => {
                   )}
                 </Button>
 
-                {result && (
-                  <div className="mt-4 p-4 rounded-lg bg-muted/50 border border-border">
-                    <Label className="text-sm font-medium mb-2 block">Result:</Label>
-                    <pre className="text-xs font-mono whitespace-pre-wrap break-all text-foreground">
-                      {result}
-                    </pre>
+                {emailResult && (
+                  <div className="mt-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-medium">Email Result:</Label>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={copyToClipboard}
+                        className="h-8"
+                      >
+                        {copied ? (
+                          <>
+                            <CheckCircle className="w-4 h-4 mr-1 text-green-500" />
+                            Copied
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-4 h-4 mr-1" />
+                            Copy
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                    <div className="p-4 rounded-lg bg-muted/50 border border-border">
+                      <pre className="text-sm font-mono whitespace-pre-wrap break-all text-foreground">
+                        {emailResult}
+                      </pre>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Format: email:password:refreshToken:clientId
+                    </p>
                   </div>
                 )}
               </CardContent>

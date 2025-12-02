@@ -20,3 +20,6 @@ verify_jwt = false
 
 [functions.discord-link]
 verify_jwt = false
+
+[functions.fetch-unlock-email]
+verify_jwt = false
