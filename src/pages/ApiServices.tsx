@@ -150,6 +150,31 @@ export default function ApiServices() {
         link: "https://discord.com/verify/...",
         status: "success"
       }, null, 2)
+    },
+    {
+      id: "fetch-unlock-email",
+      title: "Fetch Unlock Email",
+      description: "جلب بيانات الإيميل من ballmail.shop أو bee-mails.com",
+      method: "POST",
+      endpoint: `${baseUrl}/fetch-unlock-email`,
+      requestBody: JSON.stringify({
+        provider: "ballmail",
+        apiKey: "YOUR_API_KEY_HERE",
+        count: 1
+      }, null, 2),
+      responseExample: JSON.stringify({
+        success: true,
+        provider: "ballmail",
+        data: {
+          success: true,
+          data: [{
+            login: "email@outlook.com",
+            password: "password123",
+            refresh_token: "M.C551_BAY.0.U.-Ckq9LOK...",
+            service_id: "9e5f94bc-e8a4-4e73-b8be-63364c29d753"
+          }]
+        }
+      }, null, 2)
     }
   ];
 
