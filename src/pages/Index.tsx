@@ -1,4 +1,4 @@
-import { Mail, Key, Smartphone, Shield, Code, QrCode, CheckCircle } from "lucide-react";
+import { Mail, Key, Smartphone, Shield, Code, QrCode, CheckCircle, Unlock } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { ServiceCard } from "@/components/ServiceCard";
 import { Footer } from "@/components/Footer";
@@ -10,6 +10,7 @@ import discordCheckerIllustration from "@/assets/discord-checker-illustration.jp
 import tokensCheckerIllustration from "@/assets/tokens-checker-illustration.jpg";
 import apiServicesIllustration from "@/assets/api-services-illustration.jpg";
 import qrCodeIllustration from "@/assets/qr-code-illustration.jpg";
+import discordUnlockerIllustration from "@/assets/discord-unlocker-illustration.jpg";
 
 const Index = () => {
   const { t } = useTranslation();
@@ -49,6 +50,13 @@ const Index = () => {
       description: t('services.tokensChecker.description'),
       image: tokensCheckerIllustration,
       link: "/tokens-checker",
+    },
+    {
+      icon: Unlock,
+      title: "Discord Unlocker",
+      description: "Unlock Discord accounts using email verification requests",
+      image: discordUnlockerIllustration,
+      link: "/discord-unlocker",
     },
     {
       icon: Code,
