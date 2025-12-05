@@ -15,6 +15,9 @@ verify_jwt = false
 [functions.check-discord-trials]
 verify_jwt = false
 
+[functions.check-discord-tokens]
+verify_jwt = false
+
 [functions.get-discord-link]
 verify_jwt = false
 
