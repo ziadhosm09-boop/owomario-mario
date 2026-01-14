@@ -35,7 +35,14 @@ function parseToken(line: string): { token: string; fullLine: string } {
     }
   }
   
-  // Plain token format (no colons)
+  // Check if it's just "token" format (token wrapped in quotes)
+  if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || 
+      (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
+    const token = trimmed.slice(1, -1);
+    return { token, fullLine: trimmed };
+  }
+  
+  // Plain token format (no colons, no quotes)
   return { token: trimmed, fullLine: trimmed };
 }
 

@@ -172,8 +172,8 @@ const TokensChecker = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Token Input</CardTitle>
-                <CardDescription>
-                  Enter tokens (one per line). Supports formats: token, email:pass:token, email:pass:"token"
+              <CardDescription>
+                  Enter tokens (one per line). Supports formats: token, "token", email:pass:token, email:pass:"token"
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -181,7 +181,7 @@ const TokensChecker = () => {
                   <Label htmlFor="tokens">Tokens</Label>
                   <Textarea
                     id="tokens"
-                    placeholder="Enter tokens here (one per line)&#10;token&#10;email:pass:token&#10;email:pass:&quot;token&quot;"
+                    placeholder="Enter tokens here (one per line)&#10;token&#10;&quot;token&quot;&#10;email:pass:token&#10;email:pass:&quot;token&quot;"
                     value={tokens}
                     onChange={(e) => setTokens(e.target.value)}
                     className="min-h-[200px] font-mono text-sm"
