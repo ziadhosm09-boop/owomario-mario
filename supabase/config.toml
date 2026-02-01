@@ -26,3 +26,6 @@ verify_jwt = false
 
 [functions.fetch-unlock-email]
 verify_jwt = false
+
+[functions.check-token-age]
+verify_jwt = false
