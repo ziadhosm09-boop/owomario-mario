@@ -2,6 +2,8 @@ import { Mail, Key, Smartphone, Shield, Code, QrCode, CheckCircle, Unlock } from
 import { Navbar } from "@/components/Navbar";
 import { ServiceCard } from "@/components/ServiceCard";
 import { Footer } from "@/components/Footer";
+import { YouTubeBanner } from "@/components/YouTubeBanner";
+import { YouTubeVideos } from "@/components/YouTubeVideos";
 import { useTranslation } from "react-i18next";
 import emailIllustration from "@/assets/email-illustration.jpg";
 import tfaIllustration from "@/assets/2fa-illustration.jpg";
@@ -93,6 +95,11 @@ const Index = () => {
           </div>
         </section>
 
+        {/* YouTube Banner */}
+        <section className="container mx-auto px-4 py-6">
+          <YouTubeBanner />
+        </section>
+
         {/* Services Section */}
         <section className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -107,6 +114,9 @@ const Index = () => {
             ))}
           </div>
         </section>
+
+        {/* YouTube Videos Section */}
+        <YouTubeVideos />
       </main>
 
       <Footer />
