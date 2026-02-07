@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { Bot, Unlock, Trophy, MessageCircle, Sparkles, ShoppingCart } from "lucide-react";
+import { Bot, Unlock, Trophy, MessageCircle, Sparkles, ShoppingCart, DollarSign, CreditCard, Package } from "lucide-react";
 
 const DiscordIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -16,6 +16,7 @@ interface Tool {
   nameEn: string;
   descriptionAr: string;
   descriptionEn: string;
+  price: string;
   badge?: string;
 }
 
@@ -26,6 +27,7 @@ const tools: Tool[] = [
     nameEn: "Token Gen",
     descriptionAr: "توليد توكنات ديسكورد",
     descriptionEn: "Generate Discord tokens",
+    price: "$150",
     badge: "🔥 Hot"
   },
   {
@@ -34,6 +36,7 @@ const tools: Tool[] = [
     nameEn: "Unlocker",
     descriptionAr: "فتح الحسابات المقفولة (Locked Email / Unclaimed)",
     descriptionEn: "Unlock locked accounts (Locked Email / Unclaimed)",
+    price: "$100",
     badge: "⭐ Popular"
   },
   {
@@ -42,6 +45,7 @@ const tools: Tool[] = [
     nameEn: "Quest Claimer",
     descriptionAr: "جمع مكافآت الكويستات تلقائياً",
     descriptionEn: "Claim quest rewards automatically",
+    price: "$50",
   }
 ];
 
@@ -64,6 +68,16 @@ export const ToolsPromotion = () => {
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* One-time Payment Notice */}
+        <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/30">
+          <p className="text-sm text-center font-medium text-green-600 dark:text-green-400">
+            {isArabic 
+              ? "💰 الدفع مرة واحدة فقط + السورس كود كامل (Open Source)" 
+              : "💰 One-time payment + Full Open Source code"
+            }
+          </p>
+        </div>
+
         {/* Tools Grid */}
         <div className="grid gap-3">
           {tools.map((tool, index) => (
@@ -87,8 +101,57 @@ export const ToolsPromotion = () => {
                   {isArabic ? tool.descriptionAr : tool.descriptionEn}
                 </p>
               </div>
+              <div className="text-right">
+                <Badge className="bg-primary text-primary-foreground font-bold text-base px-3 py-1">
+                  {tool.price}
+                </Badge>
+              </div>
             </div>
           ))}
+        </div>
+
+        {/* Bundle Offer */}
+        <div className="p-4 rounded-lg bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 border-2 border-primary/50">
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center gap-2">
+              <Package className="w-6 h-6 text-primary" />
+              <div>
+                <h4 className="font-bold text-lg">
+                  {isArabic ? "🎁 باقة كاملة (الكل)" : "🎁 Full Bundle (All Tools)"}
+                </h4>
+                <p className="text-sm text-muted-foreground">
+                  {isArabic ? "Token Gen + Unlocker + Quest Claimer" : "Token Gen + Unlocker + Quest Claimer"}
+                </p>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-sm text-muted-foreground line-through">$300</div>
+              <Badge className="bg-green-500 text-white font-bold text-xl px-4 py-2">
+                $200
+              </Badge>
+            </div>
+          </div>
+        </div>
+
+        {/* Payment Methods */}
+        <div className="p-4 rounded-lg bg-muted/50 border border-border">
+          <div className="flex items-center gap-2 mb-3">
+            <CreditCard className="w-5 h-5 text-primary" />
+            <h4 className="font-semibold">
+              {isArabic ? "طرق الدفع المتاحة:" : "Payment Methods:"}
+            </h4>
+          </div>
+          <div className="flex flex-wrap gap-2 justify-center">
+            <Badge variant="outline" className="px-3 py-1.5 text-sm">
+              📱 Vodafone Cash
+            </Badge>
+            <Badge variant="outline" className="px-3 py-1.5 text-sm">
+              💵 USDT Wallet
+            </Badge>
+            <Badge variant="outline" className="px-3 py-1.5 text-sm">
+              🔶 Binance ID
+            </Badge>
+          </div>
         </div>
 
         {/* Custom Request Section */}
@@ -121,8 +184,8 @@ export const ToolsPromotion = () => {
         {/* Footer Note */}
         <p className="text-xs text-center text-muted-foreground">
           {isArabic 
-            ? "💬 للاستفسار عن الأسعار أو أي أداة أخرى، تواصل معنا!"
-            : "💬 For pricing or any other tool inquiries, contact us!"
+            ? "💬 للاستفسار عن أي شيء آخر، تواصل معنا!"
+            : "💬 For any other inquiries, contact us!"
           }
         </p>
       </CardContent>
