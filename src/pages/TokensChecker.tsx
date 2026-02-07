@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -10,13 +11,14 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   Loader2, CheckCircle, XCircle, Mail, Smartphone, AlertCircle, 
-  Download, Eye, Copy, Calendar, Clock, Flag, Lock, User
+  Download, Eye, Copy, Calendar, Clock, Flag, Lock, User, ShoppingCart, ChevronDown, ChevronUp
 } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ToolsPromotion } from "@/components/ToolsPromotion";
 
 // Discord Icon component
@@ -67,6 +69,8 @@ interface CombinedResults {
 }
 
 const TokensChecker = () => {
+  const { i18n } = useTranslation();
+  
   // Input state
   const [tokens, setTokens] = useState("");
   const [threadCount, setThreadCount] = useState(5);
@@ -75,6 +79,7 @@ const TokensChecker = () => {
   const [enableStatus, setEnableStatus] = useState(true);
   const [enableAge, setEnableAge] = useState(false);
   const [enableFlags, setEnableFlags] = useState(false);
+  const [showToolsPromo, setShowToolsPromo] = useState(false);
   
   // Processing state
   const [isChecking, setIsChecking] = useState(false);
@@ -336,10 +341,31 @@ const TokensChecker = () => {
               </Badge>
             </div>
 
-            {/* Tools Promotion Ad */}
-            <div className="mb-8">
-              <ToolsPromotion />
-            </div>
+            {/* Tools Promotion Collapsible */}
+            <Collapsible open={showToolsPromo} onOpenChange={setShowToolsPromo} className="mb-8">
+              <CollapsibleTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  className="w-full flex items-center justify-between gap-2 py-6 border-dashed border-2 border-primary/30 hover:border-primary/50 hover:bg-primary/5"
+                >
+                  <div className="flex items-center gap-2">
+                    <ShoppingCart className="w-5 h-5 text-primary" />
+                    <span className="font-semibold">
+                      {i18n.language === 'ar' ? "🛒 المزيد من الأدوات" : "🛒 More Tools"}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge className="bg-gradient-primary text-white text-xs">
+                      {i18n.language === 'ar' ? "للبيع" : "For Sale"}
+                    </Badge>
+                    {showToolsPromo ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  </div>
+                </Button>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="mt-4">
+                <ToolsPromotion />
+              </CollapsibleContent>
+            </Collapsible>
 
             <div className="text-center mb-8">
               <h1 className="text-4xl font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent">
