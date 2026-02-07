@@ -17,6 +17,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { ToolsPromotion } from "@/components/ToolsPromotion";
 
 // Discord Icon component
 const DiscordIcon = ({ className }: { className?: string }) => (
@@ -333,6 +334,11 @@ const TokensChecker = () => {
                   owomario
                 </a>
               </Badge>
+            </div>
+
+            {/* Tools Promotion Ad */}
+            <div className="mb-8">
+              <ToolsPromotion />
             </div>
 
             <div className="text-center mb-8">
