@@ -14,6 +14,7 @@ import TokensChecker from "./pages/TokensChecker";
 import ApiServices from "./pages/ApiServices";
 import QRCodeGenerator from "./pages/QRCodeGenerator";
 import DiscordUnlocker from "./pages/DiscordUnlocker";
+import MakeTokensNoCap from "./pages/MakeTokensNoCap";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/api" element={<ApiServices />} />
             <Route path="/qr-code" element={<QRCodeGenerator />} />
             <Route path="/discord-unlocker" element={<DiscordUnlocker />} />
+            <Route path="/make-tokens-nocap" element={<MakeTokensNoCap />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

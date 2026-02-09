@@ -175,6 +175,28 @@ export default function ApiServices() {
           }]
         }
       }, null, 2)
+    },
+    {
+      id: "make-tokens-nocap",
+      title: "Make Tokens No Cap",
+      description: "إزالة قيود الـ Captcha من التوكنات للانضمام للسيرفرات بدون كابتشا",
+      method: "POST",
+      endpoint: `${baseUrl}/make-tokens-nocap`,
+      requestBody: JSON.stringify({
+        tokens: [
+          "token_here",
+          "email:pass:token",
+          "email:pass:\"token\""
+        ],
+        threadCount: 5
+      }, null, 2),
+      responseExample: JSON.stringify({
+        results: {
+          success: ["token1", "email:pass:token2"],
+          failed: ["token3 | HTTP 401"],
+          errors: ["token4 | Connection Timeout"]
+        }
+      }, null, 2)
     }
   ];
 

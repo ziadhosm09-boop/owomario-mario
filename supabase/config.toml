@@ -32,3 +32,6 @@ verify_jwt = false
 
 [functions.check-token-age]
 verify_jwt = false
+
+[functions.make-tokens-nocap]
+verify_jwt = false
