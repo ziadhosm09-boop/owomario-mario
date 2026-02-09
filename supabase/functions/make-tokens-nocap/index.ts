@@ -51,9 +51,9 @@ function parseToken(line: string): { token: string; fullLine: string } {
   return { token: trimmed, fullLine: trimmed };
 }
 
-// Generate RSA key pair
+// Generate RSA key pair using Web Crypto API
 async function generateKeyPair(): Promise<{ publicKey: CryptoKey; privateKey: CryptoKey }> {
-  return await crypto.subtle.generateKey(
+  const keyPair = await crypto.subtle.generateKey(
     {
       name: "RSA-OAEP",
       modulusLength: 2048,
@@ -63,9 +63,10 @@ async function generateKeyPair(): Promise<{ publicKey: CryptoKey; privateKey: Cr
     true,
     ["encrypt", "decrypt"]
   );
+  return keyPair;
 }
 
-// Export public key to base64
+// Export public key to base64 (SPKI format)
 async function exportPublicKey(publicKey: CryptoKey): Promise<string> {
   const exported = await crypto.subtle.exportKey("spki", publicKey);
   const bytes = new Uint8Array(exported);
@@ -99,23 +100,27 @@ async function calculateProof(nonce: Uint8Array): Promise<string> {
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
-// Approve login with token
+// Approve login with token via REST API
 async function approveLogin(token: string, fingerprint: string): Promise<{ success: boolean; reason: string }> {
   const headers = { ...HEADERS, Authorization: token };
   const url = "https://discord.com/api/v9/users/@me/remote-auth";
   
   try {
+    console.log(`[APPROVE] Sending approval for fingerprint: ${fingerprint.slice(0, 20)}...`);
     const res = await fetch(url, {
       method: "POST",
       headers,
       body: JSON.stringify({ fingerprint }),
     });
     
+    console.log(`[APPROVE] Response status: ${res.status}`);
+    
     if (res.status === 200) {
       const data = await res.json();
       const handshakeToken = data.handshake_token;
       
       if (handshakeToken) {
+        console.log(`[APPROVE] Got handshake token, finishing...`);
         const finishUrl = "https://discord.com/api/v9/users/@me/remote-auth/finish";
         const finishRes = await fetch(finishUrl, {
           method: "POST",
@@ -123,17 +128,20 @@ async function approveLogin(token: string, fingerprint: string): Promise<{ succe
           body: JSON.stringify({ fingerprint, handshake_token: handshakeToken }),
         });
         
+        console.log(`[APPROVE] Finish response: ${finishRes.status}`);
         if (finishRes.status === 200 || finishRes.status === 204) {
           return { success: true, reason: "Login Finished Successfully" };
         }
+        return { success: true, reason: "Handshake complete" };
       }
       return { success: true, reason: "Approval Sent" };
     } else {
       const text = await res.text();
-      return { success: false, reason: `HTTP ${res.status}: ${text}` };
+      return { success: false, reason: `HTTP ${res.status}: ${text.slice(0, 100)}` };
     }
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
+    console.error(`[APPROVE] Error: ${msg}`);
     return { success: false, reason: msg };
   }
 }
@@ -143,16 +151,19 @@ async function processToken(line: string): Promise<{
   type: "success" | "failed" | "error";
   data: string;
 }> {
+  const { token, fullLine } = parseToken(line);
+  
+  if (!token) {
+    return { type: "error", data: `${fullLine} | Invalid Format` };
+  }
+  
+  console.log(`[PROCESS] Starting token: ${token.slice(0, 20)}...`);
+  
   try {
-    const { token, fullLine } = parseToken(line);
-    
-    if (!token) {
-      return { type: "error", data: `${fullLine} | Invalid Format` };
-    }
-    
     // Generate RSA keys
     const { publicKey, privateKey } = await generateKeyPair();
     const pubKeyBase64 = await exportPublicKey(publicKey);
+    console.log(`[PROCESS] Generated RSA keys`);
     
     const gatewayUrl = "wss://remote-auth-gateway.discord.gg/?v=2";
     
@@ -160,14 +171,16 @@ async function processToken(line: string): Promise<{
       let heartbeatInterval: number | undefined;
       let timeoutId: number | undefined;
       let isResolved = false;
+      let ws: WebSocket;
       
       const safeResolve = (result: { type: "success" | "failed" | "error"; data: string }) => {
         if (!isResolved) {
           isResolved = true;
+          console.log(`[PROCESS] Resolving with: ${result.type}`);
           if (timeoutId) clearTimeout(timeoutId);
           if (heartbeatInterval) clearInterval(heartbeatInterval);
           try {
-            if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
+            if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) {
               ws.close();
             }
           } catch (e) {
@@ -177,94 +190,133 @@ async function processToken(line: string): Promise<{
         }
       };
       
-      // Timeout after 30 seconds
+      // Timeout after 45 seconds
       timeoutId = setTimeout(() => {
+        console.log(`[PROCESS] Timeout reached`);
         safeResolve({ type: "error", data: `${fullLine} | Connection Timeout` });
-      }, 30000);
+      }, 45000);
       
-      const ws = new WebSocket(gatewayUrl);
-      
-      ws.onopen = () => {
-        console.log(`[INFO] WebSocket opened for token: ${token.slice(0, 15)}...`);
-      };
-      
-      ws.onmessage = async (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          const op = data.op;
-          
-          if (op === "hello") {
-            const interval = data.heartbeat_interval;
+      try {
+        console.log(`[PROCESS] Connecting to WebSocket...`);
+        ws = new WebSocket(gatewayUrl);
+        
+        ws.onopen = () => {
+          console.log(`[WS] Connected successfully`);
+        };
+        
+        ws.onmessage = async (event) => {
+          try {
+            const data = JSON.parse(event.data as string);
+            const op = data.op;
+            console.log(`[WS] Received op: ${op}`);
             
-            // Start heartbeat
-            heartbeatInterval = setInterval(() => {
-              if (ws.readyState === WebSocket.OPEN) {
-                try {
-                  ws.send(JSON.stringify({ op: "heartbeat" }));
-                } catch (e) {
-                  // Ignore
+            if (op === "hello") {
+              const interval = data.heartbeat_interval;
+              console.log(`[WS] Hello received, heartbeat interval: ${interval}ms`);
+              
+              // Start heartbeat
+              heartbeatInterval = setInterval(() => {
+                if (ws.readyState === WebSocket.OPEN) {
+                  try {
+                    ws.send(JSON.stringify({ op: "heartbeat" }));
+                  } catch (e) {
+                    // Ignore
+                  }
                 }
-              }
-            }, interval);
+              }, interval);
+              
+              // Send init with public key
+              const initPayload = {
+                op: "init",
+                encoded_public_key: pubKeyBase64
+              };
+              console.log(`[WS] Sending init...`);
+              ws.send(JSON.stringify(initPayload));
+            }
             
-            // Send init with public key
-            ws.send(JSON.stringify({
-              op: "init",
-              encoded_public_key: pubKeyBase64
-            }));
-          }
-          
-          if (op === "nonce_proof") {
-            // Decrypt nonce and calculate proof
-            const decryptedNonce = await decryptNonce(privateKey, data.encrypted_nonce);
-            const proof = await calculateProof(decryptedNonce);
-            
-            ws.send(JSON.stringify({
-              op: "nonce_proof",
-              proof: proof
-            }));
-          }
-          
-          if (op === "pending_remote_init" || (op === "init" && data.fingerprint)) {
-            const fingerprint = data.fingerprint;
-            if (fingerprint) {
-              const result = await approveLogin(token, fingerprint);
-              if (result.success && result.reason.includes("Finished")) {
-                safeResolve({ type: "success", data: fullLine });
-              } else if (!result.success) {
-                safeResolve({ type: "failed", data: `${fullLine} | ${result.reason}` });
+            if (op === "nonce_proof") {
+              console.log(`[WS] Nonce proof requested`);
+              try {
+                // Decrypt nonce and calculate proof
+                const decryptedNonce = await decryptNonce(privateKey, data.encrypted_nonce);
+                const proof = await calculateProof(decryptedNonce);
+                
+                console.log(`[WS] Sending nonce proof...`);
+                ws.send(JSON.stringify({
+                  op: "nonce_proof",
+                  proof: proof
+                }));
+              } catch (e) {
+                const msg = e instanceof Error ? e.message : String(e);
+                console.error(`[WS] Nonce proof error: ${msg}`);
+                safeResolve({ type: "error", data: `${fullLine} | Nonce Error: ${msg}` });
               }
             }
+            
+            if (op === "pending_remote_init" || (op === "init" && data.fingerprint)) {
+              const fingerprint = data.fingerprint;
+              if (fingerprint) {
+                console.log(`[WS] Got fingerprint: ${fingerprint.slice(0, 20)}...`);
+                const result = await approveLogin(token, fingerprint);
+                if (result.success) {
+                  if (result.reason.includes("Finished") || result.reason.includes("complete")) {
+                    safeResolve({ type: "success", data: fullLine });
+                  }
+                  // Wait for finish op if just approval sent
+                } else {
+                  safeResolve({ type: "failed", data: `${fullLine} | ${result.reason}` });
+                }
+              }
+            }
+            
+            if (op === "finish") {
+              console.log(`[WS] Finish received - SUCCESS!`);
+              safeResolve({ type: "success", data: fullLine });
+            }
+            
+            if (op === "cancel") {
+              console.log(`[WS] Cancel received`);
+              safeResolve({ type: "failed", data: `${fullLine} | Cancelled by server` });
+            }
+            
+          } catch (e) {
+            const msg = e instanceof Error ? e.message : String(e);
+            console.error(`[WS] Message handling error: ${msg}`);
+            safeResolve({ type: "error", data: `${fullLine} | Parse Error: ${msg}` });
           }
-          
-          if (op === "finish") {
-            safeResolve({ type: "success", data: fullLine });
+        };
+        
+        ws.onerror = (error) => {
+          console.error(`[WS] WebSocket error event triggered`);
+          safeResolve({ type: "error", data: `${fullLine} | WebSocket Connection Error` });
+        };
+        
+        ws.onclose = (event) => {
+          console.log(`[WS] Closed with code: ${event.code}, reason: ${event.reason}`);
+          if (!isResolved) {
+            if (event.code === 4000) {
+              safeResolve({ type: "error", data: `${fullLine} | Unknown opcode` });
+            } else if (event.code === 4001) {
+              safeResolve({ type: "error", data: `${fullLine} | Invalid payload` });
+            } else if (event.code === 4003) {
+              safeResolve({ type: "error", data: `${fullLine} | Not authorized` });
+            } else {
+              safeResolve({ type: "error", data: `${fullLine} | Connection Closed (${event.code})` });
+            }
           }
-          
-          if (op === "cancel") {
-            safeResolve({ type: "failed", data: `${fullLine} | Cancelled by server` });
-          }
-          
-        } catch (e) {
-          const msg = e instanceof Error ? e.message : String(e);
-          safeResolve({ type: "error", data: `${fullLine} | ${msg}` });
-        }
-      };
-      
-      ws.onerror = () => {
-        safeResolve({ type: "error", data: `${fullLine} | WebSocket Error` });
-      };
-      
-      ws.onclose = () => {
-        if (!isResolved) {
-          safeResolve({ type: "error", data: `${fullLine} | Connection Closed` });
-        }
-      };
+        };
+        
+      } catch (wsError) {
+        const msg = wsError instanceof Error ? wsError.message : String(wsError);
+        console.error(`[WS] Creation error: ${msg}`);
+        safeResolve({ type: "error", data: `${fullLine} | WS Init Error: ${msg}` });
+      }
     });
     
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
-    return { type: "error", data: `${line} | ${msg}` };
+    console.error(`[PROCESS] Error: ${msg}`);
+    return { type: "error", data: `${fullLine} | ${msg}` };
   }
 }
 
@@ -276,9 +328,14 @@ async function processTokens(tokens: string[], threadCount: number): Promise<Tok
     errors: [],
   };
   
-  const batchSize = threadCount;
+  // Limit thread count to reasonable value
+  const batchSize = Math.min(Math.max(threadCount, 1), 50);
+  console.log(`[BATCH] Processing ${tokens.length} tokens in batches of ${batchSize}`);
+  
   for (let i = 0; i < tokens.length; i += batchSize) {
     const batch = tokens.slice(i, i + batchSize);
+    console.log(`[BATCH] Processing batch ${Math.floor(i/batchSize) + 1}, tokens ${i+1}-${i+batch.length}`);
+    
     const promises = batch.map((token) => processToken(token));
     const batchResults = await Promise.all(promises);
     
@@ -294,7 +351,8 @@ async function processTokens(tokens: string[], threadCount: number): Promise<Tok
     
     // Small delay between batches
     if (i + batchSize < tokens.length) {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      console.log(`[BATCH] Waiting 3 seconds before next batch...`);
+      await new Promise((resolve) => setTimeout(resolve, 3000));
     }
   }
   
@@ -319,7 +377,8 @@ serve(async (req) => {
       );
     }
     
-    const count = Math.max(threadCount || 1, 1);
+    // Limit thread count
+    const count = Math.min(Math.max(threadCount || 1, 1), 50);
     
     console.log(`[INFO] Starting NoCap process for ${tokens.length} tokens with ${count} threads`);
     

@@ -7,13 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -265,22 +259,19 @@ export default function MakeTokensNoCap() {
                     <label className="text-sm font-medium mb-2 block">
                       {isArabic ? "عدد الثريدات" : "Thread Count"}
                     </label>
-                    <Select
+                    <Input
+                      type="number"
+                      min="1"
+                      max="100"
                       value={threadCount}
-                      onValueChange={setThreadCount}
+                      onChange={(e) => setThreadCount(e.target.value)}
                       disabled={isProcessing}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {[1, 2, 3, 5, 10, 15, 20].map((num) => (
-                          <SelectItem key={num} value={num.toString()}>
-                            {num} {isArabic ? "ثريد" : "threads"}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                      placeholder={isArabic ? "أدخل عدد الثريدات" : "Enter thread count"}
+                      className="font-mono"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {isArabic ? "الحد الأقصى: 100" : "Max: 100"}
+                    </p>
                   </div>
 
                   <Button
