@@ -1,4 +1,4 @@
-import { Mail, Key, Smartphone, Shield, Code, QrCode, CheckCircle, Unlock } from "lucide-react";
+import { Mail, Key, Smartphone, Shield, Code, QrCode, CheckCircle, Unlock, Zap } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { ServiceCard } from "@/components/ServiceCard";
 import { Footer } from "@/components/Footer";
@@ -13,6 +13,7 @@ import tokensCheckerIllustration from "@/assets/tokens-checker-illustration.jpg"
 import apiServicesIllustration from "@/assets/api-services-illustration.jpg";
 import qrCodeIllustration from "@/assets/qr-code-illustration.jpg";
 import discordUnlockerIllustration from "@/assets/discord-unlocker-illustration.jpg";
+import nocapIllustration from "@/assets/nocap-illustration.jpg";
 
 const Index = () => {
   const { t } = useTranslation();
@@ -59,6 +60,13 @@ const Index = () => {
       description: "Unlock Discord accounts using email verification requests",
       image: discordUnlockerIllustration,
       link: "/discord-unlocker",
+    },
+    {
+      icon: Zap,
+      title: "Make Tokens No Cap",
+      description: "Remove captcha restrictions for server joins",
+      image: nocapIllustration,
+      link: "/make-tokens-nocap",
     },
     {
       icon: Code,
