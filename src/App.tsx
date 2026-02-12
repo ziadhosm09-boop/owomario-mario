@@ -9,12 +9,8 @@ import Index from "./pages/Index";
 import EmailCodes from "./pages/EmailCodes";
 import TwoFAGenerator from "./pages/TwoFAGenerator";
 import PhoneVerification from "./pages/PhoneVerification";
-import DiscordTrialChecker from "./pages/DiscordTrialChecker";
-import TokensChecker from "./pages/TokensChecker";
+import DiscordTools from "./pages/DiscordTools";
 import ApiServices from "./pages/ApiServices";
-import QRCodeGenerator from "./pages/QRCodeGenerator";
-import DiscordUnlocker from "./pages/DiscordUnlocker";
-import MakeTokensNoCap from "./pages/MakeTokensNoCap";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,12 +27,8 @@ const App = () => (
             <Route path="/email" element={<EmailCodes />} />
             <Route path="/2fa" element={<TwoFAGenerator />} />
             <Route path="/phone" element={<PhoneVerification />} />
-            <Route path="/discord-checker" element={<DiscordTrialChecker />} />
-            <Route path="/tokens-checker" element={<TokensChecker />} />
+            <Route path="/discord-tools" element={<DiscordTools />} />
             <Route path="/api" element={<ApiServices />} />
-            <Route path="/qr-code" element={<QRCodeGenerator />} />
-            <Route path="/discord-unlocker" element={<DiscordUnlocker />} />
-            <Route path="/make-tokens-nocap" element={<MakeTokensNoCap />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
