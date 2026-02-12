@@ -1,4 +1,4 @@
-import { Mail, Key, Smartphone, Shield, Code, QrCode, CheckCircle, Unlock, Zap } from "lucide-react";
+import { Mail, Key, Smartphone, Code, Wrench } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { ServiceCard } from "@/components/ServiceCard";
 import { Footer } from "@/components/Footer";
@@ -9,11 +9,7 @@ import emailIllustration from "@/assets/email-illustration.jpg";
 import tfaIllustration from "@/assets/2fa-illustration.jpg";
 import phoneIllustration from "@/assets/phone-illustration.jpg";
 import discordCheckerIllustration from "@/assets/discord-checker-illustration.jpg";
-import tokensCheckerIllustration from "@/assets/tokens-checker-illustration.jpg";
 import apiServicesIllustration from "@/assets/api-services-illustration.jpg";
-import qrCodeIllustration from "@/assets/qr-code-illustration.jpg";
-import discordUnlockerIllustration from "@/assets/discord-unlocker-illustration.jpg";
-import nocapIllustration from "@/assets/nocap-illustration.jpg";
 
 const Index = () => {
   const { t } = useTranslation();
@@ -41,32 +37,11 @@ const Index = () => {
       link: "/phone",
     },
     {
-      icon: Shield,
-      title: t('services.discordChecker.title'),
-      description: t('services.discordChecker.description'),
+      icon: Wrench,
+      title: "Discord Tools",
+      description: "All Discord tools in one place - Trial Checker, Tokens Checker, Change Password",
       image: discordCheckerIllustration,
-      link: "/discord-checker",
-    },
-    {
-      icon: CheckCircle,
-      title: t('services.tokensChecker.title'),
-      description: t('services.tokensChecker.description'),
-      image: tokensCheckerIllustration,
-      link: "/tokens-checker",
-    },
-    {
-      icon: Unlock,
-      title: "Discord Unlocker",
-      description: "Unlock Discord accounts using email verification requests",
-      image: discordUnlockerIllustration,
-      link: "/discord-unlocker",
-    },
-    {
-      icon: Zap,
-      title: "Make Tokens No Cap",
-      description: "Remove captcha restrictions for server joins",
-      image: nocapIllustration,
-      link: "/make-tokens-nocap",
+      link: "/discord-tools",
     },
     {
       icon: Code,
@@ -74,13 +49,6 @@ const Index = () => {
       description: t('services.apiServices.description'),
       image: apiServicesIllustration,
       link: "/api",
-    },
-    {
-      icon: QrCode,
-      title: t('services.qrCode.title'),
-      description: t('services.qrCode.description'),
-      image: qrCodeIllustration,
-      link: "/qr-code",
     },
   ];
 

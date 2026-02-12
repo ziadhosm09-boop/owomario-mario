@@ -35,3 +35,6 @@ verify_jwt = false
 
 [functions.make-tokens-nocap]
 verify_jwt = false
+
+[functions.change-discord-pass]
+verify_jwt = false
