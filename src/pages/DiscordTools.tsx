@@ -16,6 +16,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ToolsPromotion } from "@/components/ToolsPromotion";
+import { IdeasSection } from "@/components/IdeasSection";
 import {
   Shield, CheckCircle, XCircle, Mail, Smartphone, AlertCircle,
   Download, Eye, Copy, Calendar, Clock, Flag, Lock, User,
@@ -790,6 +791,13 @@ const DiscordTools = () => {
           </ScrollArea>
         </DialogContent>
       </Dialog>
+
+      {/* Ideas */}
+      <div className="container mx-auto px-4 pb-12">
+        <div className="max-w-4xl mx-auto">
+          <IdeasSection section="discord-tools" />
+        </div>
+      </div>
     </div>
   );
 };

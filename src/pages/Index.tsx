@@ -1,5 +1,7 @@
 import { Mail, Key, Smartphone, Code, Wrench } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
+import { IdeasSection } from "@/components/IdeasSection";
+import { FeedbackSection } from "@/components/FeedbackSection";
 import { ServiceCard } from "@/components/ServiceCard";
 import { Footer } from "@/components/Footer";
 import { YouTubeBanner } from "@/components/YouTubeBanner";
@@ -93,6 +95,14 @@ const Index = () => {
 
         {/* YouTube Videos Section */}
         <YouTubeVideos />
+
+        {/* Ideas & Feedback */}
+        <section className="container mx-auto px-4 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <IdeasSection section="home" />
+            <FeedbackSection />
+          </div>
+        </section>
       </main>
 
       <Footer />
