@@ -44,6 +44,45 @@ export type Database = {
         }
         Relationships: []
       }
+      feedback: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      ideas: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          section: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          section?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          section?: string
+        }
+        Relationships: []
+      }
       phone_history: {
         Row: {
           code: string | null

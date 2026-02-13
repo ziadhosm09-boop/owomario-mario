@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { IdeasSection } from "@/components/IdeasSection";
 import { Key, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -134,6 +135,9 @@ const TwoFAGenerator = () => {
                 )}
               </div>
             </div>
+          </div>
+          <div className="max-w-2xl mx-auto mt-8">
+            <IdeasSection section="2fa" />
           </div>
         </div>
       </main>

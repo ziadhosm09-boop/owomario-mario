@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Copy, Check } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { IdeasSection } from "@/components/IdeasSection";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -402,6 +403,9 @@ export default function ApiServices() {
               <li>يمكنك استخدام Authorization header إذا لزم الأمر</li>
               <li>API الخاص بـ Amazon OTP يحذف الرسالة تلقائياً بعد قراءتها</li>
             </ul>
+          </div>
+          <div className="mt-8">
+            <IdeasSection section="api" />
           </div>
           </div>
         </div>
