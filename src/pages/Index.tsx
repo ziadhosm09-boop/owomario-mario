@@ -62,9 +62,16 @@ const Index = () => {
         {/* Hero Section */}
         <section className="relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-hero pointer-events-none" />
+          {/* Glassmorphism floating orbs */}
+          <div className="absolute top-20 left-[10%] w-72 h-72 bg-primary/15 rounded-full blur-[100px] pointer-events-none" />
+          <div className="absolute top-40 right-[15%] w-64 h-64 bg-secondary/15 rounded-full blur-[100px] pointer-events-none" />
           
-          <div className="container mx-auto px-4 py-20 text-center relative z-10">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-primary bg-clip-text text-transparent animate-in fade-in slide-in-from-bottom-4 duration-1000">
+          <div className="container mx-auto px-4 py-24 text-center relative z-10">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6 text-sm text-muted-foreground">
+              <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+              All tools ready to use
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent bg-[length:200%_auto] animate-in fade-in slide-in-from-bottom-4 duration-1000">
               {t('hero.title')}
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-150">
@@ -84,8 +91,8 @@ const Index = () => {
             {services.map((service, index) => (
               <div
                 key={service.title}
-                className="animate-in fade-in slide-in-from-bottom-4 duration-1000"
-                style={{ animationDelay: `${(index + 3) * 150}ms` }}
+                className="animate-in fade-in slide-in-from-bottom-4 duration-700"
+                style={{ animationDelay: `${(index + 1) * 100}ms` }}
               >
                 <ServiceCard {...service} />
               </div>

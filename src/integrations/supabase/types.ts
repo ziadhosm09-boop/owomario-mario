@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_history: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          id: string
+          input_summary: string | null
+          result_summary: string | null
+          success: boolean
+          tool_name: string
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          input_summary?: string | null
+          result_summary?: string | null
+          success?: boolean
+          tool_name: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          input_summary?: string | null
+          result_summary?: string | null
+          success?: boolean
+          tool_name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       email_codes_history: {
         Row: {
           created_at: string
@@ -117,6 +153,7 @@ export type Database = {
           full_name: string | null
           id: string
           updated_at: string
+          username: string | null
         }
         Insert: {
           created_at?: string
@@ -124,6 +161,7 @@ export type Database = {
           full_name?: string | null
           id: string
           updated_at?: string
+          username?: string | null
         }
         Update: {
           created_at?: string
@@ -131,6 +169,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           updated_at?: string
+          username?: string | null
         }
         Relationships: []
       }

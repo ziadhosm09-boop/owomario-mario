@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAuth, saveActivity } from "@/hooks/useAuth";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -126,6 +127,7 @@ const DiscordTools = () => {
   const { i18n } = useTranslation();
   const isAr = i18n.language === 'ar';
   const { toast } = useToast();
+  const { user } = useAuth();
   const [activeTool, setActiveTool] = useState<ActiveTool>(null);
   const [showToolsPromo, setShowToolsPromo] = useState(false);
 
@@ -236,6 +238,7 @@ const DiscordTools = () => {
       toast({ title: "Done", description: `Trials: ${data.results.trial.length}` });
     } catch (e: any) {
       toast({ title: "Error", description: e.message, variant: "destructive" });
+      if (user) saveActivity(user.id, "Discord Tools", "Trial Check", false, e.message);
     } finally {
       setTrialChecking(false);
     }
@@ -310,8 +313,10 @@ const DiscordTools = () => {
       }
       setTokensResults(newResults);
       toast({ title: "Done", description: `Checked ${tokenList.length} tokens` });
+      if (user) saveActivity(user.id, "Discord Tools", "Tokens Check", true, `Checked ${tokenList.length} tokens`, `${tokenList.length} tokens`);
     } catch (e: any) {
       toast({ title: "Error", description: e.message, variant: "destructive" });
+      if (user) saveActivity(user.id, "Discord Tools", "Tokens Check", false, e.message);
     } finally {
       setTokensChecking(false);
       setProgress(0);
@@ -348,8 +353,10 @@ const DiscordTools = () => {
       if (error) throw error;
       setChangePassResults(data.results);
       toast({ title: "Done", description: `Success: ${data.results.success.length} | Failed: ${data.results.failed.length}` });
+      if (user) saveActivity(user.id, "Discord Tools", "Change Password", true, `Success: ${data.results.success.length}, Failed: ${data.results.failed.length}`, `${lines.length} accounts`);
     } catch (e: any) {
       toast({ title: "Error", description: e.message, variant: "destructive" });
+      if (user) saveActivity(user.id, "Discord Tools", "Change Password", false, e.message);
     } finally {
       setChangePassChecking(false);
     }

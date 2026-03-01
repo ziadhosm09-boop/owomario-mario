@@ -1,102 +1,45 @@
-import { Shield, Mail, Key, Smartphone, Code, QrCode, CheckCircle, Unlock } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { Shield, User, LogIn } from "lucide-react";
+import { Link } from "react-router-dom";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "./ui/button";
 
 export const Navbar = () => {
-  const location = useLocation();
-  const { t } = useTranslation();
-  
-  const isActive = (path: string) => location.pathname === path;
-  
+  const { user, loading } = useAuth();
+
   return (
-    <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+    <nav className="fixed top-0 w-full z-50 backdrop-blur-xl bg-background/40 border-b border-white/5">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="p-2 rounded-lg bg-gradient-primary shadow-glow">
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="p-2.5 rounded-xl bg-gradient-to-br from-primary to-secondary shadow-lg shadow-primary/20 group-hover:shadow-primary/40 transition-shadow">
               <Shield className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+            <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               VerifyHub
             </span>
           </Link>
-          
-          <div className="hidden md:flex items-center gap-6">
-            <Link 
-              to="/" 
-              className={`flex items-center gap-2 transition-colors ${
-                isActive('/') ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              {t('nav.home')}
-            </Link>
-            <Link 
-              to="/email" 
-              className={`flex items-center gap-2 transition-colors ${
-                isActive('/email') ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              <Mail className="w-4 h-4" />
-              {t('nav.emailCodes')}
-            </Link>
-            <Link 
-              to="/2fa" 
-              className={`flex items-center gap-2 transition-colors ${
-                isActive('/2fa') ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              <Key className="w-4 h-4" />
-              {t('nav.twoFAGenerator')}
-            </Link>
-            <Link 
-              to="/phone" 
-              className={`flex items-center gap-2 transition-colors ${
-                isActive('/phone') ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              <Smartphone className="w-4 h-4" />
-              {t('nav.phoneVerification')}
-            </Link>
-            <Link 
-              to="/tokens-checker" 
-              className={`flex items-center gap-2 transition-colors ${
-                isActive('/tokens-checker') ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              <CheckCircle className="w-4 h-4" />
-              {t('nav.tokensChecker')}
-            </Link>
-            <Link 
-              to="/discord-unlocker" 
-              className={`flex items-center gap-2 transition-colors ${
-                isActive('/discord-unlocker') ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              <Unlock className="w-4 h-4" />
-              Discord Unlocker
-            </Link>
-            <Link 
-              to="/api" 
-              className={`flex items-center gap-2 transition-colors ${
-                isActive('/api') ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              <Code className="w-4 h-4" />
-              {t('nav.apiServices')}
-            </Link>
-            <Link 
-              to="/qr-code" 
-              className={`flex items-center gap-2 transition-colors ${
-                isActive('/qr-code') ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              <QrCode className="w-4 h-4" />
-              {t('nav.qrCode')}
-            </Link>
+
+          <div className="flex items-center gap-3">
+            <LanguageSwitcher />
+            {!loading && (
+              user ? (
+                <Link to="/profile">
+                  <Button variant="ghost" size="sm" className="gap-2 backdrop-blur-sm bg-white/5 border border-white/10 hover:bg-white/10">
+                    <User className="w-4 h-4" />
+                    Profile
+                  </Button>
+                </Link>
+              ) : (
+                <Link to="/auth">
+                  <Button size="sm" className="gap-2 bg-gradient-to-r from-primary to-secondary hover:opacity-90">
+                    <LogIn className="w-4 h-4" />
+                    Login
+                  </Button>
+                </Link>
+              )
+            )}
           </div>
-          
-          <LanguageSwitcher />
         </div>
       </div>
     </nav>

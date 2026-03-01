@@ -92,34 +92,6 @@ export default function ApiServices() {
       }, null, 2)
     },
     {
-      id: "generate-2fa",
-      title: "Generate 2FA",
-      description: "توليد كود 2FA من Secret",
-      method: "POST",
-      endpoint: `${baseUrl}/generate-2fa`,
-      requestBody: JSON.stringify({
-        secret: "YOUR_2FA_SECRET_HERE"
-      }, null, 2),
-      responseExample: JSON.stringify({
-        code: "123456",
-        timeRemaining: 25
-      }, null, 2)
-    },
-    {
-      id: "phone-code",
-      title: "Phone Verification",
-      description: "جلب كود التحقق من رقم الهاتف",
-      method: "POST",
-      endpoint: `${baseUrl}/fetch-phone-code`,
-      requestBody: JSON.stringify({
-        phoneNumber: "+1234567890"
-      }, null, 2),
-      responseExample: JSON.stringify({
-        code: "123456",
-        message: "Code retrieved successfully"
-      }, null, 2)
-    },
-    {
       id: "discord-checker",
       title: "Discord Trial Checker",
       description: "فحص حالة التجربة المجانية لـ Discord",
@@ -152,53 +124,6 @@ export default function ApiServices() {
         status: "success"
       }, null, 2)
     },
-    {
-      id: "fetch-unlock-email",
-      title: "Fetch Unlock Email",
-      description: "جلب بيانات الإيميل من ballmail.shop أو bee-mails.com",
-      method: "POST",
-      endpoint: `${baseUrl}/fetch-unlock-email`,
-      requestBody: JSON.stringify({
-        provider: "ballmail",
-        apiKey: "YOUR_API_KEY_HERE",
-        count: 1
-      }, null, 2),
-      responseExample: JSON.stringify({
-        success: true,
-        provider: "ballmail",
-        data: {
-          success: true,
-          data: [{
-            login: "email@outlook.com",
-            password: "password123",
-            refresh_token: "M.C551_BAY.0.U.-Ckq9LOK...",
-            service_id: "9e5f94bc-e8a4-4e73-b8be-63364c29d753"
-          }]
-        }
-      }, null, 2)
-    },
-    {
-      id: "make-tokens-nocap",
-      title: "Make Tokens No Cap",
-      description: "إزالة قيود الـ Captcha من التوكنات للانضمام للسيرفرات بدون كابتشا",
-      method: "POST",
-      endpoint: `${baseUrl}/make-tokens-nocap`,
-      requestBody: JSON.stringify({
-        tokens: [
-          "token_here",
-          "email:pass:token",
-          "email:pass:\"token\""
-        ],
-        threadCount: 5
-      }, null, 2),
-      responseExample: JSON.stringify({
-        results: {
-          success: ["token1", "email:pass:token2"],
-          failed: ["token3 | HTTP 401"],
-          errors: ["token4 | Connection Timeout"]
-        }
-      }, null, 2)
-    }
   ];
 
   const handleCopy = async (text: string, id: string) => {
