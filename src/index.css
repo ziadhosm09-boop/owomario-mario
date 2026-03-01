@@ -12,31 +12,27 @@
   }
 }
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    --background: 220 25% 6%;
-    --foreground: 0 0% 95%;
+    --background: 230 25% 7%;
+    --foreground: 0 0% 96%;
 
-    --card: 220 22% 10%;
-    --card-foreground: 0 0% 95%;
+    --card: 230 20% 11%;
+    --card-foreground: 0 0% 96%;
 
-    --popover: 220 22% 10%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 230 20% 11%;
+    --popover-foreground: 0 0% 96%;
 
-    --primary: 220 90% 56%;
+    --primary: 230 80% 62%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 280 85% 60%;
+    --secondary: 270 70% 60%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 220 18% 18%;
-    --muted-foreground: 220 12% 65%;
+    --muted: 230 15% 16%;
+    --muted-foreground: 230 10% 55%;
 
-    --accent: 160 75% 45%;
+    --accent: 170 60% 45%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 55%;
@@ -48,21 +44,26 @@ All colors MUST be HSL.
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
 
-    --border: 220 18% 18%;
-    --input: 220 18% 18%;
-    --ring: 220 90% 56%;
+    --border: 230 15% 16%;
+    --input: 230 15% 16%;
+    --ring: 230 80% 62%;
 
     --radius: 0.75rem;
 
-    --gradient-primary: linear-gradient(135deg, hsl(220 90% 56%) 0%, hsl(280 85% 60%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(280 85% 60%) 0%, hsl(320 80% 55%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(160 75% 45%) 0%, hsl(180 70% 50%) 100%);
-    --gradient-card: linear-gradient(135deg, hsl(220 25% 12%) 0%, hsl(240 20% 15%) 100%);
-    --gradient-hero: radial-gradient(ellipse at top, hsl(220 90% 30% / 0.3) 0%, transparent 50%);
+    --gradient-primary: linear-gradient(135deg, hsl(230 80% 62%) 0%, hsl(270 70% 60%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(270 70% 60%) 0%, hsl(320 65% 55%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(170 60% 45%) 0%, hsl(190 55% 50%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(230 20% 12% / 0.6) 0%, hsl(250 18% 15% / 0.6) 100%);
+    --gradient-hero: radial-gradient(ellipse at top, hsl(230 80% 30% / 0.25) 0%, transparent 60%);
     
-    --shadow-glow: 0 0 60px hsl(220 90% 56% / 0.4);
-    --shadow-glow-accent: 0 0 40px hsl(160 75% 45% / 0.3);
-    --shadow-card: 0 8px 32px hsl(220 90% 10% / 0.5);
+    --shadow-glow: 0 0 60px hsl(230 80% 62% / 0.3);
+    --shadow-glow-accent: 0 0 40px hsl(170 60% 45% / 0.2);
+    --shadow-card: 0 8px 32px hsl(230 80% 10% / 0.4);
+
+    /* Glassmorphism tokens */
+    --glass-bg: hsl(230 20% 14% / 0.4);
+    --glass-border: hsl(0 0% 100% / 0.08);
+    --glass-highlight: hsl(0 0% 100% / 0.05);
   }
 }
 
@@ -73,5 +74,23 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Glassmorphism utility classes */
+@layer utilities {
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+  }
+
+  .glass-strong {
+    background: hsl(230 20% 14% / 0.7);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid hsl(0 0% 100% / 0.12);
   }
 }

@@ -11,6 +11,8 @@ import TwoFAGenerator from "./pages/TwoFAGenerator";
 import PhoneVerification from "./pages/PhoneVerification";
 import DiscordTools from "./pages/DiscordTools";
 import ApiServices from "./pages/ApiServices";
+import Auth from "./pages/Auth";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +26,8 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/email" element={<EmailCodes />} />
             <Route path="/2fa" element={<TwoFAGenerator />} />
             <Route path="/phone" element={<PhoneVerification />} />
