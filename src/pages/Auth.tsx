@@ -28,7 +28,6 @@ export default function Auth() {
         toast.success("Welcome back!");
         navigate("/");
       } else {
-        // Check username uniqueness
         if (!form.username.trim() || form.username.length < 3) {
           toast.error("Username must be at least 3 characters");
           setLoading(false);
@@ -56,7 +55,6 @@ export default function Auth() {
         });
         if (error) throw error;
 
-        // Update username in profile
         if (data.user) {
           await supabase
             .from("profiles")
@@ -78,14 +76,14 @@ export default function Auth() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       {/* Background effects */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[128px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-[128px]" />
+        <div className="absolute top-1/3 left-1/3 w-[500px] h-[500px] bg-primary/8 rounded-full blur-[150px]" />
+        <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-secondary/6 rounded-full blur-[150px]" />
       </div>
 
-      <Card className="w-full max-w-md relative backdrop-blur-xl bg-card/60 border-white/10 shadow-2xl">
+      <Card className="w-full max-w-md relative glass-card border-white/5 shadow-2xl">
         <CardHeader className="text-center space-y-4">
-          <div className="mx-auto p-3 rounded-2xl bg-primary/10 w-fit">
-            <Shield className="w-8 h-8 text-primary" />
+          <div className="mx-auto p-3 rounded-2xl bg-gradient-to-br from-primary to-secondary w-fit shadow-glow">
+            <Shield className="w-8 h-8 text-primary-foreground" />
           </div>
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             {isLogin ? "Welcome Back" : "Create Account"}
@@ -106,7 +104,7 @@ export default function Auth() {
                   placeholder="Choose a username"
                   value={form.username}
                   onChange={(e) => setForm({ ...form, username: e.target.value })}
-                  className="bg-background/50 border-white/10 backdrop-blur-sm"
+                  className="bg-background/50 border-white/10"
                   required
                   minLength={3}
                 />
@@ -121,7 +119,7 @@ export default function Auth() {
                 placeholder="you@example.com"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="bg-background/50 border-white/10 backdrop-blur-sm"
+                className="bg-background/50 border-white/10"
                 required
               />
             </div>
@@ -134,7 +132,7 @@ export default function Auth() {
                 placeholder="••••••••"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="bg-background/50 border-white/10 backdrop-blur-sm"
+                className="bg-background/50 border-white/10"
                 required
                 minLength={6}
               />
