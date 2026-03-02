@@ -41,7 +41,7 @@ const Index = () => {
     {
       icon: Wrench,
       title: "Discord Tools",
-      description: "All Discord tools in one place - Trial Checker, Tokens Checker, Change Password",
+      description: "Trial Checker, Tokens Checker, Change Password, Email Verify",
       image: discordCheckerIllustration,
       link: "/discord-tools",
     },
@@ -55,19 +55,21 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <Navbar />
       
-      <main className="pt-24 pb-12">
+      {/* Background effects */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-10 left-[10%] w-[500px] h-[500px] bg-primary/6 rounded-full blur-[150px]" />
+        <div className="absolute top-40 right-[5%] w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 left-[40%] w-[500px] h-[300px] bg-accent/4 rounded-full blur-[120px]" />
+      </div>
+
+      <main className="pt-24 pb-12 relative z-10">
         {/* Hero Section */}
         <section className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-hero pointer-events-none" />
-          {/* Glassmorphism floating orbs */}
-          <div className="absolute top-20 left-[10%] w-72 h-72 bg-primary/15 rounded-full blur-[100px] pointer-events-none" />
-          <div className="absolute top-40 right-[15%] w-64 h-64 bg-secondary/15 rounded-full blur-[100px] pointer-events-none" />
-          
-          <div className="container mx-auto px-4 py-24 text-center relative z-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6 text-sm text-muted-foreground">
+          <div className="container mx-auto px-4 py-20 md:py-28 text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-primary/20 mb-6 text-sm text-muted-foreground">
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
               All tools ready to use
             </div>

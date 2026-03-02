@@ -12,7 +12,7 @@ interface ServiceCardProps {
 
 export const ServiceCard = ({ icon: Icon, title, description, image, link }: ServiceCardProps) => {
   return (
-    <div className="group relative overflow-hidden rounded-2xl glass hover:border-primary/30 transition-all duration-500 hover:shadow-glow hover:-translate-y-1">
+    <div className="group relative overflow-hidden rounded-2xl glass-card hover:border-primary/20 transition-all duration-500 hover:shadow-glow hover:-translate-y-1">
       <div className="aspect-video overflow-hidden relative">
         <img 
           src={image} 
@@ -20,12 +20,12 @@ export const ServiceCard = ({ icon: Icon, title, description, image, link }: Ser
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent" />
       </div>
       
       <div className="p-6 space-y-4 relative">
         <div className="flex items-center gap-3">
-          <div className="p-3 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 backdrop-blur-sm border border-white/10">
+          <div className="p-3 rounded-xl bg-gradient-to-br from-primary/15 to-secondary/15 backdrop-blur-sm border border-white/5">
             <Icon className="w-5 h-5 text-primary" />
           </div>
           <h3 className="text-xl font-bold">{title}</h3>

@@ -8,12 +8,12 @@ export const Navbar = () => {
   const { user, loading } = useAuth();
 
   return (
-    <nav className="fixed top-0 w-full z-50 backdrop-blur-xl bg-background/40 border-b border-white/5">
-      <div className="container mx-auto px-4 py-4">
+    <nav className="fixed top-0 w-full z-50 glass-strong">
+      <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="p-2.5 rounded-xl bg-gradient-to-br from-primary to-secondary shadow-lg shadow-primary/20 group-hover:shadow-primary/40 transition-shadow">
-              <Shield className="w-5 h-5 text-white" />
+            <div className="p-2 rounded-xl bg-gradient-to-br from-primary to-secondary shadow-lg shadow-primary/20 group-hover:shadow-primary/40 transition-all group-hover:scale-105">
+              <Shield className="w-5 h-5 text-primary-foreground" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               VerifyHub
@@ -25,7 +25,7 @@ export const Navbar = () => {
             {!loading && (
               user ? (
                 <Link to="/profile">
-                  <Button variant="ghost" size="sm" className="gap-2 backdrop-blur-sm bg-white/5 border border-white/10 hover:bg-white/10">
+                  <Button variant="ghost" size="sm" className="gap-2 glass border-white/10 hover:bg-white/5">
                     <User className="w-4 h-4" />
                     Profile
                   </Button>
