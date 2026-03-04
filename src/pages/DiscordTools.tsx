@@ -192,6 +192,12 @@ const DiscordTools = () => {
   const [emailVerifyChecking, setEmailVerifyChecking] = useState(false);
   const [emailVerifyProgress, setEmailVerifyProgress] = useState(0);
 
+  // ---- Email Fetcher State ----
+  const [fetchApiKey, setFetchApiKey] = useState("");
+  const [fetchAccountType, setFetchAccountType] = useState<"OUTLOOK" | "HOTMAIL">("OUTLOOK");
+  const [fetchQuantity, setFetchQuantity] = useState(10);
+  const [fetchingEmails, setFetchingEmails] = useState(false);
+
   // ---- Dialog State ----
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogContent, setDialogContent] = useState<string[]>([]);
@@ -410,6 +416,32 @@ const DiscordTools = () => {
       if (user) saveActivity(user.id, "Discord Tools", "Change Password", false, e.message);
     } finally {
       setChangePassChecking(false);
+    }
+  };
+
+  // ---- Fetch Emails from API ----
+  const handleFetchEmails = async () => {
+    if (!fetchApiKey.trim()) {
+      toast({ title: "Error", description: "Enter your API Key", variant: "destructive" });
+      return;
+    }
+    setFetchingEmails(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("fetch-outlook-emails", {
+        body: { apiKey: fetchApiKey, accountType: fetchAccountType, quantity: fetchQuantity },
+      });
+      if (error) throw error;
+      if (data.error) throw new Error(data.error);
+      if (data.emails?.length) {
+        setEmails(prev => prev ? prev + "\n" + data.emails.join("\n") : data.emails.join("\n"));
+        toast({ title: "Done", description: `Fetched ${data.total} emails` });
+      } else {
+        toast({ title: "No emails", description: "API returned no accounts", variant: "destructive" });
+      }
+    } catch (e: any) {
+      toast({ title: "Error", description: e.message, variant: "destructive" });
+    } finally {
+      setFetchingEmails(false);
     }
   };
 
@@ -912,7 +944,42 @@ const DiscordTools = () => {
                         className="min-h-[150px] font-mono text-sm bg-background/50 border-white/10" disabled={emailVerifyChecking} />
                     </div>
 
-                    {/* Emails */}
+                    {/* Fetch Emails from API */}
+                    <div className="p-4 rounded-xl glass border border-primary/20 space-y-3">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Zap className="w-4 h-4 text-primary" />
+                        <Label className="text-base font-semibold">Fetch Emails via API</Label>
+                      </div>
+                      <p className="text-xs text-muted-foreground">Enter your Zeus-X API key to auto-fetch Outlook/Hotmail accounts</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                          <Label className="text-xs">API Key</Label>
+                          <Input type="text" placeholder="Your API Key" value={fetchApiKey} onChange={e => setFetchApiKey(e.target.value)}
+                            className="bg-background/50 border-white/10 font-mono text-sm" />
+                        </div>
+                        <div>
+                          <Label className="text-xs">Account Type</Label>
+                          <Select value={fetchAccountType} onValueChange={(v: "OUTLOOK" | "HOTMAIL") => setFetchAccountType(v)}>
+                            <SelectTrigger className="bg-background/50 border-white/10"><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="OUTLOOK">OUTLOOK</SelectItem>
+                              <SelectItem value="HOTMAIL">HOTMAIL</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label className="text-xs">Quantity</Label>
+                          <Input type="number" min="1" max="500" value={fetchQuantity} onChange={e => setFetchQuantity(Number(e.target.value))}
+                            className="bg-background/50 border-white/10" />
+                        </div>
+                      </div>
+                      <Button onClick={handleFetchEmails} disabled={fetchingEmails || !fetchApiKey.trim()} variant="outline"
+                        className="w-full border-primary/30 hover:bg-primary/10">
+                        {fetchingEmails ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Fetching...</> : <><Download className="w-4 h-4 mr-2" /> Fetch Emails</>}
+                      </Button>
+                    </div>
+
+                    {/* Emails Textarea */}
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <Label className="text-base font-semibold">Outlook Emails</Label>
