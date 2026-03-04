@@ -38,3 +38,9 @@ verify_jwt = false
 
 [functions.change-discord-pass]
 verify_jwt = false
+
+[functions.fetch-outlook-emails]
+verify_jwt = false
+
+[functions.discord-email-verify]
+verify_jwt = false
