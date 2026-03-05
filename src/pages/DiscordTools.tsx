@@ -979,16 +979,17 @@ const DiscordTools = () => {
                       </Button>
                     </div>
 
-                    {/* Emails Textarea */}
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <Label className="text-base font-semibold">Outlook Emails</Label>
-                        <FileUploadButton onLoad={(text) => setEmails(prev => prev ? prev + "\n" + text : text)} label="Load TXT" />
+                    {/* Fetched Emails Count */}
+                    {emails.trim() && (
+                      <div className="flex items-center justify-between p-3 rounded-xl glass border border-green-500/20">
+                        <span className="text-sm text-green-400 font-medium">
+                          ✅ {emails.split("\n").filter(e => e.trim()).length} emails loaded
+                        </span>
+                        <Button variant="ghost" size="sm" onClick={() => setEmails("")} className="text-muted-foreground hover:text-destructive">
+                          <X className="w-4 h-4" />
+                        </Button>
                       </div>
-                      <p className="text-xs text-muted-foreground mb-2">Format: email:password:refreshToken:clientId</p>
-                      <Textarea placeholder="email:pass:refreshToken:clientId" value={emails} onChange={e => setEmails(e.target.value)}
-                        className="min-h-[150px] font-mono text-sm bg-background/50 border-white/10" disabled={emailVerifyChecking} />
-                    </div>
+                    )}
 
                     <div>
                       <Label>Thread Count (Max 5)</Label>

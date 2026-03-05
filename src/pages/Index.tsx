@@ -1,4 +1,4 @@
-import { Mail, Key, Smartphone, Code, Wrench } from "lucide-react";
+import { Mail, Key, Smartphone, Code, Wrench, ShoppingCart } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { IdeasSection } from "@/components/IdeasSection";
 import { FeedbackSection } from "@/components/FeedbackSection";
@@ -6,6 +6,7 @@ import { ServiceCard } from "@/components/ServiceCard";
 import { Footer } from "@/components/Footer";
 import { YouTubeBanner } from "@/components/YouTubeBanner";
 import { YouTubeVideos } from "@/components/YouTubeVideos";
+import { AdsBanner } from "@/components/AdsBanner";
 import { useTranslation } from "react-i18next";
 import emailIllustration from "@/assets/email-illustration.jpg";
 import tfaIllustration from "@/assets/2fa-illustration.jpg";
@@ -52,6 +53,13 @@ const Index = () => {
       image: apiServicesIllustration,
       link: "/api",
     },
+    {
+      icon: ShoppingCart,
+      title: "P2P Trading",
+      description: "Buy & sell Discord tokens securely with ticket system",
+      image: discordCheckerIllustration,
+      link: "/p2p",
+    },
   ];
 
   return (
@@ -80,6 +88,11 @@ const Index = () => {
               {t('hero.subtitle')}
             </p>
           </div>
+        </section>
+
+        {/* Ads Banner */}
+        <section className="container mx-auto px-4 py-6">
+          <AdsBanner />
         </section>
 
         {/* YouTube Banner */}
