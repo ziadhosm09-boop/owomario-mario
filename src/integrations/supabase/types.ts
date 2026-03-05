@@ -50,6 +50,36 @@ export type Database = {
         }
         Relationships: []
       }
+      ads: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string
+          id: string
+          image_url: string | null
+          link_url: string | null
+          title: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by: string
+          id?: string
+          image_url?: string | null
+          link_url?: string | null
+          title?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          image_url?: string | null
+          link_url?: string | null
+          title?: string | null
+        }
+        Relationships: []
+      }
       email_codes_history: {
         Row: {
           created_at: string
@@ -118,6 +148,118 @@ export type Database = {
           section?: string
         }
         Relationships: []
+      }
+      p2p_listings: {
+        Row: {
+          created_at: string
+          currency: string
+          description: string | null
+          discord_id: string
+          discord_username: string
+          id: string
+          item_category: string
+          listing_type: string
+          price: number
+          quantity: number
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          description?: string | null
+          discord_id: string
+          discord_username: string
+          id?: string
+          item_category: string
+          listing_type?: string
+          price: number
+          quantity?: number
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          description?: string | null
+          discord_id?: string
+          discord_username?: string
+          id?: string
+          item_category?: string
+          listing_type?: string
+          price?: number
+          quantity?: number
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      p2p_messages: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          sender_id: string
+          ticket_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          sender_id: string
+          ticket_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          sender_id?: string
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "p2p_messages_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "p2p_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      p2p_tickets: {
+        Row: {
+          buyer_id: string
+          created_at: string
+          id: string
+          listing_id: string
+          seller_id: string
+          status: string
+        }
+        Insert: {
+          buyer_id: string
+          created_at?: string
+          id?: string
+          listing_id: string
+          seller_id: string
+          status?: string
+        }
+        Update: {
+          buyer_id?: string
+          created_at?: string
+          id?: string
+          listing_id?: string
+          seller_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "p2p_tickets_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "p2p_listings"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       phone_history: {
         Row: {

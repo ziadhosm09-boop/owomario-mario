@@ -15,6 +15,7 @@ import ApiServices from "./pages/ApiServices";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
+import P2P from "./pages/P2P";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="/phone" element={<ProtectedRoute><PhoneVerification /></ProtectedRoute>} />
             <Route path="/discord-tools" element={<ProtectedRoute><DiscordTools /></ProtectedRoute>} />
             <Route path="/api" element={<ProtectedRoute><ApiServices /></ProtectedRoute>} />
+            <Route path="/p2p" element={<ProtectedRoute><P2P /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
