@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { User, History, CheckCircle, XCircle, Clock, LogOut, Loader2, Eye, Download, Copy, ChevronDown, ChevronUp } from "lucide-react";
+import { User, History, CheckCircle, XCircle, Clock, LogOut, Loader2, Eye, Download, Copy, ChevronDown, ChevronUp, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 interface ActivityItem {
@@ -32,29 +33,20 @@ export default function Profile() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogContent, setDialogContent] = useState<string[]>([]);
   const [dialogTitle, setDialogTitle] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        navigate("/auth");
-        return;
-      }
+      if (!user) { navigate("/auth"); return; }
       setUser(user);
 
-      const { data: profileData } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .single();
+      const { data: profileData } = await supabase.from("profiles").select("*").eq("id", user.id).single();
       setProfile(profileData);
 
       const { data: historyData } = await supabase
-        .from("activity_history")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(200);
+        .from("activity_history").select("*").eq("user_id", user.id)
+        .order("created_at", { ascending: false }).limit(200);
       setHistory((historyData as ActivityItem[]) || []);
       setLoading(false);
     };
@@ -67,20 +59,42 @@ export default function Profile() {
     navigate("/auth");
   };
 
+  const handleClearHistory = async () => {
+    if (!user || !confirm("Are you sure you want to delete all activity history?")) return;
+    setDeleting(true);
+    try {
+      const { error } = await supabase.from("activity_history").delete().eq("user_id", user.id);
+      if (error) throw error;
+      setHistory([]);
+      toast.success("History cleared");
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const handleDeleteItem = async (id: string) => {
+    try {
+      const { error } = await supabase.from("activity_history").delete().eq("id", id);
+      if (error) throw error;
+      setHistory(prev => prev.filter(h => h.id !== id));
+      toast.success("Deleted");
+    } catch (e: any) {
+      toast.error(e.message);
+    }
+  };
+
   const downloadResults = (items: string[], filename: string) => {
     const blob = new Blob([items.join("\n")], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    a.click();
+    a.href = url; a.download = filename; a.click();
     URL.revokeObjectURL(url);
   };
 
   const openDialog = (items: string[], title: string) => {
-    setDialogContent(items);
-    setDialogTitle(title);
-    setDialogOpen(true);
+    setDialogContent(items); setDialogTitle(title); setDialogOpen(true);
   };
 
   const copyAll = () => {
@@ -88,34 +102,19 @@ export default function Profile() {
     toast.success("Copied All");
   };
 
-  // Extract viewable result categories from details
   const getResultCategories = (item: ActivityItem) => {
     if (!item.details?.results) return [];
     const results = item.details.results;
     const categories: { key: string; title: string; items: string[]; count: number }[] = [];
-
-    // Handle different result structures
-    if (results.working || results.invalid || results.email_locked || results.phone_locked || results.errors) {
-      // Status check results
-      if (results.working?.length) categories.push({ key: "working", title: "Working", items: results.working, count: results.working.length });
-      if (results.email_locked?.length) categories.push({ key: "email_locked", title: "Email Locked", items: results.email_locked, count: results.email_locked.length });
-      if (results.phone_locked?.length) categories.push({ key: "phone_locked", title: "Phone Locked", items: results.phone_locked, count: results.phone_locked.length });
-      if (results.invalid?.length) categories.push({ key: "invalid", title: "Invalid", items: results.invalid, count: results.invalid.length });
-      if (results.errors?.length) categories.push({ key: "errors", title: "Errors", items: results.errors, count: results.errors.length });
-    }
-    if (results.success && Array.isArray(results.success)) {
-      categories.push({ key: "success", title: "Success", items: results.success, count: results.success.length });
-    }
-    if (results.failed && Array.isArray(results.failed)) {
-      categories.push({ key: "failed", title: "Failed", items: results.failed, count: results.failed.length });
-    }
-    if (results.trial && Array.isArray(results.trial)) {
-      categories.push({ key: "trial", title: "Trial", items: results.trial, count: results.trial.length });
-    }
-    if (results.no_trial && Array.isArray(results.no_trial)) {
-      categories.push({ key: "no_trial", title: "No Trial", items: results.no_trial, count: results.no_trial.length });
-    }
-    // Status results nested
+    if (results.working?.length) categories.push({ key: "working", title: "Working", items: results.working, count: results.working.length });
+    if (results.email_locked?.length) categories.push({ key: "email_locked", title: "Email Locked", items: results.email_locked, count: results.email_locked.length });
+    if (results.phone_locked?.length) categories.push({ key: "phone_locked", title: "Phone Locked", items: results.phone_locked, count: results.phone_locked.length });
+    if (results.invalid?.length) categories.push({ key: "invalid", title: "Invalid", items: results.invalid, count: results.invalid.length });
+    if (results.errors?.length) categories.push({ key: "errors", title: "Errors", items: results.errors, count: results.errors.length });
+    if (results.success && Array.isArray(results.success)) categories.push({ key: "success", title: "Success", items: results.success, count: results.success.length });
+    if (results.failed && Array.isArray(results.failed)) categories.push({ key: "failed", title: "Failed", items: results.failed, count: results.failed.length });
+    if (results.trial && Array.isArray(results.trial)) categories.push({ key: "trial", title: "Trial", items: results.trial, count: results.trial.length });
+    if (results.no_trial && Array.isArray(results.no_trial)) categories.push({ key: "no_trial", title: "No Trial", items: results.no_trial, count: results.no_trial.length });
     if (results.status) {
       const s = results.status;
       if (s.working?.length) categories.push({ key: "status_working", title: "Working", items: s.working, count: s.working.length });
@@ -123,7 +122,6 @@ export default function Profile() {
       if (s.phone_locked?.length) categories.push({ key: "status_phone", title: "Phone Locked", items: s.phone_locked, count: s.phone_locked.length });
       if (s.invalid?.length) categories.push({ key: "status_invalid", title: "Invalid", items: s.invalid, count: s.invalid.length });
     }
-    // Flags nested
     if (results.flags) {
       const f = results.flags;
       if (f.valid?.length) categories.push({ key: "flags_clean", title: "Clean", items: f.valid, count: f.valid.length });
@@ -144,7 +142,6 @@ export default function Profile() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
-      {/* Background effects */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/8 rounded-full blur-[128px]" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/6 rounded-full blur-[128px]" />
@@ -163,9 +160,7 @@ export default function Profile() {
                   <div>
                     <h2 className="text-2xl font-bold">{profile?.username || "User"}</h2>
                     <p className="text-muted-foreground text-sm">{profile?.email}</p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Joined {new Date(profile?.created_at).toLocaleDateString()}
-                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">Joined {new Date(profile?.created_at).toLocaleDateString()}</p>
                   </div>
                 </div>
                 <Button variant="outline" onClick={handleLogout} className="gap-2 border-white/10 hover:bg-destructive/10 hover:border-destructive/30 hover:text-destructive">
@@ -178,11 +173,19 @@ export default function Profile() {
           {/* Activity History */}
           <Card className="glass-card border-white/5">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <History className="w-5 h-5 text-primary" />
-                Activity History
-                <Badge variant="secondary" className="ml-2">{history.length}</Badge>
-              </CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <History className="w-5 h-5 text-primary" />
+                  Activity History
+                  <Badge variant="secondary" className="ml-2">{history.length}</Badge>
+                </CardTitle>
+                {history.length > 0 && (
+                  <Button variant="destructive" size="sm" onClick={handleClearHistory} disabled={deleting} className="gap-2">
+                    {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                    Clear All
+                  </Button>
+                )}
+              </div>
             </CardHeader>
             <CardContent>
               {history.length === 0 ? (
@@ -196,46 +199,38 @@ export default function Profile() {
                       const hasDetails = categories.length > 0;
 
                       return (
-                        <div key={item.id} className="rounded-xl glass border-white/5 overflow-hidden transition-all">
+                        <div key={item.id} className="rounded-xl glass border-white/5 overflow-hidden transition-all group/item">
                           <div
                             className={`flex items-start gap-3 p-4 ${hasDetails ? 'cursor-pointer hover:bg-white/[0.02]' : ''} transition-colors`}
                             onClick={() => hasDetails && setExpandedId(isExpanded ? null : item.id)}
                           >
                             <div className="mt-1">
-                              {item.success ? (
-                                <CheckCircle className="w-5 h-5 text-green-400" />
-                              ) : (
-                                <XCircle className="w-5 h-5 text-red-400" />
-                              )}
+                              {item.success ? <CheckCircle className="w-5 h-5 text-green-400" /> : <XCircle className="w-5 h-5 text-red-400" />}
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-1 flex-wrap">
-                                <Badge variant="secondary" className="text-xs bg-primary/10 text-primary border-primary/20">
-                                  {item.tool_name}
-                                </Badge>
+                                <Badge variant="secondary" className="text-xs bg-primary/10 text-primary border-primary/20">{item.tool_name}</Badge>
                                 <span className="text-sm font-medium">{item.action}</span>
                               </div>
-                              {item.input_summary && (
-                                <p className="text-xs text-muted-foreground mb-0.5">Input: {item.input_summary}</p>
-                              )}
-                              {item.result_summary && (
-                                <p className="text-sm text-muted-foreground truncate">
-                                  {item.result_summary}
-                                </p>
-                              )}
+                              {item.input_summary && <p className="text-xs text-muted-foreground mb-0.5">Input: {item.input_summary}</p>}
+                              {item.result_summary && <p className="text-sm text-muted-foreground truncate">{item.result_summary}</p>}
                             </div>
                             <div className="flex items-center gap-2 shrink-0">
+                              <Button
+                                variant="ghost" size="icon"
+                                className="h-7 w-7 opacity-0 group-hover/item:opacity-100 transition-opacity text-destructive hover:bg-destructive/10"
+                                onClick={(e) => { e.stopPropagation(); handleDeleteItem(item.id); }}
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </Button>
                               <div className="flex items-center gap-1 text-xs text-muted-foreground">
                                 <Clock className="w-3 h-3" />
                                 {new Date(item.created_at).toLocaleString()}
                               </div>
-                              {hasDetails && (
-                                isExpanded ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />
-                              )}
+                              {hasDetails && (isExpanded ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />)}
                             </div>
                           </div>
 
-                          {/* Expanded details */}
                           {isExpanded && hasDetails && (
                             <div className="px-4 pb-4 pt-0 border-t border-white/5">
                               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mt-3">
@@ -270,7 +265,6 @@ export default function Profile() {
       </main>
       <Footer />
 
-      {/* View Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-2xl glass-strong">
           <DialogHeader>
