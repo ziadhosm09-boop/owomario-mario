@@ -226,6 +226,44 @@ export type Database = {
           },
         ]
       }
+      p2p_ratings: {
+        Row: {
+          created_at: string
+          id: string
+          rated_user_id: string
+          rater_id: string
+          rating: number
+          review: string | null
+          ticket_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          rated_user_id: string
+          rater_id: string
+          rating?: number
+          review?: string | null
+          ticket_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          rated_user_id?: string
+          rater_id?: string
+          rating?: number
+          review?: string | null
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "p2p_ratings_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "p2p_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       p2p_tickets: {
         Row: {
           buyer_id: string
@@ -294,6 +332,7 @@ export type Database = {
           email: string
           full_name: string | null
           id: string
+          p2p_username: string | null
           updated_at: string
           username: string | null
         }
@@ -302,6 +341,7 @@ export type Database = {
           email: string
           full_name?: string | null
           id: string
+          p2p_username?: string | null
           updated_at?: string
           username?: string | null
         }
@@ -310,6 +350,7 @@ export type Database = {
           email?: string
           full_name?: string | null
           id?: string
+          p2p_username?: string | null
           updated_at?: string
           username?: string | null
         }
@@ -365,6 +406,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_user_rating: {
+        Args: { _user_id: string }
+        Returns: {
+          avg_rating: number
+          total_ratings: number
+          total_trades: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

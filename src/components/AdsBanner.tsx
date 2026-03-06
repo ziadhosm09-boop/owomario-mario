@@ -1,14 +1,13 @@
+
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Megaphone, Plus, Trash2, ExternalLink, X, Loader2 } from "lucide-react";
+import { Megaphone, Plus, Trash2, ExternalLink, Loader2, Lock, Unlock } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 interface Ad {
@@ -25,22 +24,18 @@ export const AdsBanner = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [ads, setAds] = useState<Ad[]>([]);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [adminUnlocked, setAdminUnlocked] = useState(false);
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState(false);
   const [newAd, setNewAd] = useState({ title: "", content: "", image_url: "", link_url: "" });
 
   useEffect(() => {
     fetchAds();
-    if (user) checkAdmin();
-  }, [user]);
-
-  const checkAdmin = async () => {
-    if (!user) return;
-    const { data } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
-    setIsAdmin(!!data);
-  };
+  }, []);
 
   const fetchAds = async () => {
     setLoading(true);
@@ -49,19 +44,35 @@ export const AdsBanner = () => {
     setLoading(false);
   };
 
+  const handlePasswordSubmit = () => {
+    // Password validated server-side, but we check locally for UX
+    if (password === "z88766998Z88766998#") {
+      setAdminUnlocked(true);
+      setShowPasswordDialog(false);
+      setPasswordError(false);
+      toast({ title: "🔓 Admin Mode Unlocked" });
+    } else {
+      setPasswordError(true);
+    }
+  };
+
   const handleCreate = async () => {
     if (!newAd.content.trim()) return;
     setCreating(true);
     try {
-      const { error } = await supabase.from("ads").insert({
-        title: newAd.title || null,
-        content: newAd.content,
-        image_url: newAd.image_url || null,
-        link_url: newAd.link_url || null,
-        created_by: user!.id,
+      const res = await supabase.functions.invoke("manage-ads", {
+        body: {
+          action: "create",
+          password,
+          title: newAd.title || null,
+          content: newAd.content,
+          image_url: newAd.image_url || null,
+          link_url: newAd.link_url || null,
+          created_by: user?.id || "00000000-0000-0000-0000-000000000000",
+        },
       });
-      if (error) throw error;
-      toast({ title: "Ad created!" });
+      if (res.error) throw new Error(res.error.message);
+      toast({ title: "✅ Ad created!" });
       setNewAd({ title: "", content: "", image_url: "", link_url: "" });
       setShowCreateDialog(false);
       fetchAds();
@@ -74,8 +85,10 @@ export const AdsBanner = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      const { error } = await supabase.from("ads").delete().eq("id", id);
-      if (error) throw error;
+      const res = await supabase.functions.invoke("manage-ads", {
+        body: { action: "delete", password, id },
+      });
+      if (res.error) throw new Error(res.error.message);
       setAds(ads.filter(a => a.id !== id));
       toast({ title: "Ad deleted" });
     } catch (e: any) {
@@ -83,12 +96,47 @@ export const AdsBanner = () => {
     }
   };
 
-  if (loading || ads.length === 0 && !isAdmin) return null;
+  if (loading || (ads.length === 0 && !adminUnlocked)) return null;
 
   return (
     <div className="space-y-4">
+      {/* Admin unlock button */}
+      {!adminUnlocked && (
+        <div className="flex justify-end">
+          <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
+            <DialogTrigger asChild>
+              <Button variant="ghost" size="sm" className="gap-2 opacity-30 hover:opacity-100 transition-opacity">
+                <Lock className="w-3.5 h-3.5" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="glass-strong max-w-sm">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2"><Lock className="w-5 h-5" /> Admin Access</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label>Password</Label>
+                  <Input
+                    type="password"
+                    value={password}
+                    onChange={e => { setPassword(e.target.value); setPasswordError(false); }}
+                    placeholder="Enter admin password"
+                    className={`bg-background/50 border-white/10 ${passwordError ? "border-destructive" : ""}`}
+                    onKeyDown={e => e.key === "Enter" && handlePasswordSubmit()}
+                  />
+                  {passwordError && <p className="text-xs text-destructive mt-1">Wrong password</p>}
+                </div>
+                <Button onClick={handlePasswordSubmit} className="w-full gap-2">
+                  <Unlock className="w-4 h-4" /> Unlock
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+      )}
+
       {/* Admin controls */}
-      {isAdmin && (
+      {adminUnlocked && (
         <div className="flex justify-end">
           <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
             <DialogTrigger asChild>
@@ -126,43 +174,67 @@ export const AdsBanner = () => {
         </div>
       )}
 
-      {/* Ads display */}
+      {/* Watermark-style Ads */}
       {ads.map(ad => (
-        <Card key={ad.id} className="glass-card border-amber-500/20 relative overflow-hidden group">
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-orange-500" />
-          {isAdmin && (
-            <Button variant="ghost" size="icon" onClick={() => handleDelete(ad.id)}
-              className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive hover:bg-destructive/10 z-10">
+        <div
+          key={ad.id}
+          className="relative overflow-hidden rounded-2xl border border-amber-500/10 bg-gradient-to-br from-amber-500/5 via-transparent to-orange-500/5 backdrop-blur-sm group"
+        >
+          {/* Watermark background text */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden opacity-[0.03]">
+            <span className="text-[120px] font-black tracking-widest text-amber-500 rotate-[-15deg] whitespace-nowrap">
+              AD AD AD AD
+            </span>
+          </div>
+
+          {/* Top accent line */}
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
+
+          {/* Delete button for admin */}
+          {adminUnlocked && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => handleDelete(ad.id)}
+              className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive hover:bg-destructive/10 z-10"
+            >
               <Trash2 className="w-4 h-4" />
             </Button>
           )}
-          <CardContent className="p-5">
+
+          <div className="relative z-[1] p-5">
             <div className="flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-amber-500/10 shrink-0">
+              <div className="p-2 rounded-xl bg-amber-500/10 shrink-0 border border-amber-500/20">
                 <Megaphone className="w-5 h-5 text-amber-400" />
               </div>
               <div className="flex-1 min-w-0 space-y-2">
-                {ad.title && <h3 className="font-bold text-lg">{ad.title}</h3>}
-                <p className="text-sm text-muted-foreground whitespace-pre-wrap">{ad.content}</p>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-400/70 px-2 py-0.5 rounded-full border border-amber-500/20 bg-amber-500/5">
+                    Sponsored
+                  </span>
+                </div>
+                {ad.title && <h3 className="font-bold text-lg leading-tight">{ad.title}</h3>}
+                <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{ad.content}</p>
                 {ad.image_url && (
-                  <img src={ad.image_url} alt="Ad" className="rounded-lg max-h-48 object-cover mt-2" />
+                  <img src={ad.image_url} alt="Ad" className="rounded-xl max-h-48 object-cover mt-2 border border-white/5" />
                 )}
                 {ad.link_url && (
-                  <a href={ad.link_url} target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline mt-2">
+                  <a
+                    href={ad.link_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm text-amber-400 hover:text-amber-300 transition-colors mt-2"
+                  >
                     <ExternalLink className="w-3.5 h-3.5" /> Open Link
                   </a>
                 )}
-                <div className="flex items-center gap-2 pt-1">
-                  <Badge variant="outline" className="text-xs border-amber-500/20 text-amber-400">
-                    <Megaphone className="w-3 h-3 mr-1" /> AD
-                  </Badge>
-                  <span className="text-xs text-muted-foreground">{new Date(ad.created_at).toLocaleDateString()}</span>
+                <div className="text-[10px] text-muted-foreground/50 pt-1">
+                  {new Date(ad.created_at).toLocaleDateString()}
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       ))}
     </div>
   );
