@@ -193,6 +193,12 @@ const DiscordTools = () => {
   const [emailVerifyChecking, setEmailVerifyChecking] = useState(false);
   const [emailVerifyProgress, setEmailVerifyProgress] = useState(0);
 
+  // ---- Server Joiner State ----
+  const [inviteCode, setInviteCode] = useState("");
+  const [joinerResults, setJoinerResults] = useState<{ joined: string[]; failed: string[] } | null>(null);
+  const [joining, setJoining] = useState(false);
+  const [joinProgress, setJoinProgress] = useState(0);
+
   // ---- Email Fetcher State ----
   const [fetchApiKey, setFetchApiKey] = useState("");
   const [fetchAccountType, setFetchAccountType] = useState<"OUTLOOK" | "HOTMAIL">("OUTLOOK");
@@ -486,6 +492,44 @@ const DiscordTools = () => {
       if (user) saveActivity(user.id, "Discord Tools", "Email Verify", false, e.message);
     } finally {
       setEmailVerifyChecking(false);
+    }
+  };
+
+  // ---- Server Joiner Logic ----
+  const handleServerJoin = async () => {
+    if (!tokens.trim() || !inviteCode.trim()) return;
+    const tokenList = tokens.split("\n").filter(t => t.trim());
+    if (!tokenList.length) return;
+
+    setJoining(true);
+    setJoinerResults(null);
+    setJoinProgress(0);
+
+    try {
+      const progressInterval = setInterval(() => {
+        setJoinProgress(prev => Math.min(prev + 2, 90));
+      }, 1000);
+
+      const { data, error } = await supabase.functions.invoke("discord-server-join", {
+        body: { tokens: tokenList, inviteCode: inviteCode.trim(), threadCount: Math.min(threadCount, 5) },
+      });
+
+      clearInterval(progressInterval);
+      setJoinProgress(100);
+
+      if (error) throw error;
+      setJoinerResults(data.results);
+      toast({ title: "Done", description: `Joined: ${data.results.joined.length} | Failed: ${data.results.failed.length}` });
+      if (user) saveActivity(user.id, "Discord Tools", "Server Joiner", true,
+        `Joined: ${data.results.joined.length}, Failed: ${data.results.failed.length}`,
+        `${tokenList.length} tokens, Invite: ${inviteCode}`,
+        { results: data.results }
+      );
+    } catch (e: any) {
+      toast({ title: "Error", description: e.message, variant: "destructive" });
+      if (user) saveActivity(user.id, "Discord Tools", "Server Joiner", false, e.message);
+    } finally {
+      setJoining(false);
     }
   };
 
