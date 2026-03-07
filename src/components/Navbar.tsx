@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "./ui/button";
+import { NotificationBell } from "./NotificationBell";
 
 export const Navbar = () => {
   const { user, loading } = useAuth();
@@ -22,6 +23,7 @@ export const Navbar = () => {
 
           <div className="flex items-center gap-3">
             <LanguageSwitcher />
+            {!loading && user && <NotificationBell />}
             {!loading && (
               user ? (
                 <Link to="/profile">
