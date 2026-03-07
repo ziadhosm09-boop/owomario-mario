@@ -44,14 +44,21 @@ export const AdsBanner = () => {
     setLoading(false);
   };
 
-  const handlePasswordSubmit = () => {
-    // Password validated server-side, but we check locally for UX
-    if (password === "z88766998Z88766998#") {
+  const handlePasswordSubmit = async () => {
+    // Validate password server-side only
+    try {
+      const res = await supabase.functions.invoke("manage-ads", {
+        body: { action: "verify", password },
+      });
+      if (res.error || res.data?.error) {
+        setPasswordError(true);
+        return;
+      }
       setAdminUnlocked(true);
       setShowPasswordDialog(false);
       setPasswordError(false);
       toast({ title: "🔓 Admin Mode Unlocked" });
-    } else {
+    } catch {
       setPasswordError(true);
     }
   };
@@ -121,7 +128,7 @@ export const AdsBanner = () => {
                     value={password}
                     onChange={e => { setPassword(e.target.value); setPasswordError(false); }}
                     placeholder="Enter admin password"
-                    className={`bg-background/50 border-white/10 ${passwordError ? "border-destructive" : ""}`}
+                    className="bg-background/50 border-white/10"
                     onKeyDown={e => e.key === "Enter" && handlePasswordSubmit()}
                   />
                   {passwordError && <p className="text-xs text-destructive mt-1">Wrong password</p>}
