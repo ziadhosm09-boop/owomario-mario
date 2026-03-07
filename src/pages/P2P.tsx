@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { P2PTerms } from "@/components/P2PTerms";
+import { AdsBanner } from "@/components/AdsBanner";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -760,6 +761,7 @@ const P2P = () => {
               </div>
             )}
           </div>
+          <div className="container mx-auto px-4 py-6"><AdsBanner /></div>
         </div>
       </main>
       <Footer />
