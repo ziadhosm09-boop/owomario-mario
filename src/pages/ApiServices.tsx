@@ -4,6 +4,7 @@ import { Copy, Check } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { IdeasSection } from "@/components/IdeasSection";
+import { AdsBanner } from "@/components/AdsBanner";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -334,6 +335,7 @@ export default function ApiServices() {
           </div>
           </div>
         </div>
+        <div className="container mx-auto px-4 py-6"><AdsBanner /></div>
       </main>
       
       <Footer />

@@ -13,6 +13,7 @@ import tfaIllustration from "@/assets/2fa-illustration.jpg";
 import phoneIllustration from "@/assets/phone-illustration.jpg";
 import discordCheckerIllustration from "@/assets/discord-checker-illustration.jpg";
 import apiServicesIllustration from "@/assets/api-services-illustration.jpg";
+import p2pTradingIllustration from "@/assets/p2p-trading-illustration.jpg";
 
 const Index = () => {
   const { t } = useTranslation();
@@ -57,7 +58,7 @@ const Index = () => {
       icon: ShoppingCart,
       title: "P2P Trading",
       description: "Buy & sell Discord tokens securely with ticket system",
-      image: discordCheckerIllustration,
+      image: p2pTradingIllustration,
       link: "/p2p",
     },
   ];

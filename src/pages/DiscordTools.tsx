@@ -17,12 +17,13 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ToolsPromotion } from "@/components/ToolsPromotion";
+import { AdsBanner } from "@/components/AdsBanner";
 import { IdeasSection } from "@/components/IdeasSection";
 import {
   Shield, CheckCircle, XCircle, Mail, Smartphone, AlertCircle,
   Download, Eye, Copy, Calendar, Clock, Flag, Lock, User,
   ShoppingCart, ChevronDown, ChevronUp, Loader2, ArrowLeft, KeyRound,
-  Check, X, Zap, Upload, FileText, AlertTriangle, ShieldCheck
+  Check, X, Zap, Upload, FileText, AlertTriangle, ShieldCheck, UserPlus
 } from "lucide-react";
 import {
   Select,
@@ -39,7 +40,7 @@ const DiscordIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-type ActiveTool = null | "trial" | "tokens" | "changepass" | "emailverify";
+type ActiveTool = null | "trial" | "tokens" | "changepass" | "emailverify" | "serverjoiner";
 
 // ===================== TYPES =====================
 interface TokenCheckResults {
@@ -191,6 +192,12 @@ const DiscordTools = () => {
   const [emailVerifyResults, setEmailVerifyResults] = useState<EmailVerifyResults | null>(null);
   const [emailVerifyChecking, setEmailVerifyChecking] = useState(false);
   const [emailVerifyProgress, setEmailVerifyProgress] = useState(0);
+
+  // ---- Server Joiner State ----
+  const [inviteCode, setInviteCode] = useState("");
+  const [joinerResults, setJoinerResults] = useState<{ joined: string[]; failed: string[] } | null>(null);
+  const [joining, setJoining] = useState(false);
+  const [joinProgress, setJoinProgress] = useState(0);
 
   // ---- Email Fetcher State ----
   const [fetchApiKey, setFetchApiKey] = useState("");
@@ -488,6 +495,44 @@ const DiscordTools = () => {
     }
   };
 
+  // ---- Server Joiner Logic ----
+  const handleServerJoin = async () => {
+    if (!tokens.trim() || !inviteCode.trim()) return;
+    const tokenList = tokens.split("\n").filter(t => t.trim());
+    if (!tokenList.length) return;
+
+    setJoining(true);
+    setJoinerResults(null);
+    setJoinProgress(0);
+
+    try {
+      const progressInterval = setInterval(() => {
+        setJoinProgress(prev => Math.min(prev + 2, 90));
+      }, 1000);
+
+      const { data, error } = await supabase.functions.invoke("discord-server-join", {
+        body: { tokens: tokenList, inviteCode: inviteCode.trim(), threadCount: Math.min(threadCount, 5) },
+      });
+
+      clearInterval(progressInterval);
+      setJoinProgress(100);
+
+      if (error) throw error;
+      setJoinerResults(data.results);
+      toast({ title: "Done", description: `Joined: ${data.results.joined.length} | Failed: ${data.results.failed.length}` });
+      if (user) saveActivity(user.id, "Discord Tools", "Server Joiner", true,
+        `Joined: ${data.results.joined.length}, Failed: ${data.results.failed.length}`,
+        `${tokenList.length} tokens, Invite: ${inviteCode}`,
+        { results: data.results }
+      );
+    } catch (e: any) {
+      toast({ title: "Error", description: e.message, variant: "destructive" });
+      if (user) saveActivity(user.id, "Discord Tools", "Server Joiner", false, e.message);
+    } finally {
+      setJoining(false);
+    }
+  };
+
   // ===================== MENU =====================
   const tools = [
     {
@@ -529,6 +574,16 @@ const DiscordTools = () => {
       borderColor: "border-amber-500/20",
       iconColor: "text-amber-400",
       glowColor: "hover:shadow-[0_0_30px_hsl(38_92%_50%/0.15)]",
+    },
+    {
+      id: "serverjoiner" as const,
+      icon: UserPlus,
+      title: "Server Joiner",
+      description: isAr ? "إضافة التوكنات إلى سيرفر" : "Join tokens to a Discord server",
+      gradient: "from-rose-500/20 to-pink-500/10",
+      borderColor: "border-rose-500/20",
+      iconColor: "text-rose-400",
+      glowColor: "hover:shadow-[0_0_30px_hsl(350_65%_55%/0.15)]",
     },
   ];
 
@@ -1026,6 +1081,97 @@ const DiscordTools = () => {
                 )}
               </div>
             )}
+
+            {/* ============ SERVER JOINER ============ */}
+            {activeTool === "serverjoiner" && (
+              <div className="space-y-6">
+                <Card className="glass-card border-rose-500/10">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><UserPlus className="w-5 h-5 text-rose-400" /> Server Joiner</CardTitle>
+                    <CardDescription>
+                      {isAr ? "أدخل التوكنات ولينك الدعوة لإضافتها للسيرفر" : "Enter tokens and invite link to join them to a server"}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-start gap-3 p-4 rounded-xl bg-warning/10 border border-warning/20">
+                      <AlertTriangle className="w-5 h-5 text-warning shrink-0 mt-0.5" />
+                      <div className="text-sm space-y-1">
+                        <p className="font-semibold text-warning">Important:</p>
+                        <ul className="list-disc list-inside text-muted-foreground space-y-0.5">
+                          <li>Max <strong>5 concurrent</strong> joins</li>
+                          <li>Each token has a human-like delay</li>
+                          <li>Captcha may be required for some servers</li>
+                          <li>Use small batches for best results</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label className="text-base font-semibold">Invite Link / Code</Label>
+                      <Input
+                        placeholder="https://discord.gg/xxxxx or invite code"
+                        value={inviteCode}
+                        onChange={e => setInviteCode(e.target.value)}
+                        className="bg-background/50 border-white/10 font-mono"
+                        disabled={joining}
+                      />
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <Label className="text-base font-semibold">Tokens</Label>
+                        <FileUploadButton onLoad={(text) => setTokens(prev => prev ? prev + "\n" + text : text)} label="Load TXT" />
+                      </div>
+                      <Textarea
+                        placeholder={'token\n"token"\nemail:pass:token\nemail:pass:"token"'}
+                        value={tokens}
+                        onChange={e => setTokens(e.target.value)}
+                        className="min-h-[200px] font-mono text-sm bg-background/50 border-white/10"
+                        disabled={joining}
+                      />
+                    </div>
+
+                    <div>
+                      <Label>Thread Count (Max 5)</Label>
+                      <Input type="number" min="1" max="5" value={Math.min(threadCount, 5)}
+                        onChange={e => setThreadCount(Math.min(Number(e.target.value), 5))} className="max-w-xs bg-background/50 border-white/10" />
+                    </div>
+
+                    {joining && (
+                      <div className="space-y-2">
+                        <Progress value={joinProgress} className="h-2" />
+                        <p className="text-sm text-center text-muted-foreground">{joinProgress}% — Joining with human-like delays...</p>
+                      </div>
+                    )}
+
+                    <Button onClick={handleServerJoin} disabled={joining || !tokens.trim() || !inviteCode.trim()}
+                      className="w-full bg-gradient-to-r from-rose-500 to-pink-500 hover:opacity-90">
+                      {joining ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Joining...</> : "Start Joining"}
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {joinerResults && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <ResultCard title="Joined" count={joinerResults.joined.length}
+                      icon={<CheckCircle className="w-5 h-5 text-green-400" />} borderColor="border-green-500/30" textColor="text-green-400"
+                      items={joinerResults.joined}
+                      onDownload={() => downloadResults(joinerResults.joined, "joined.txt")}
+                      onView={() => openDialog(joinerResults.joined, "Joined")} />
+                    <ResultCard title="Failed" count={joinerResults.failed.length}
+                      icon={<XCircle className="w-5 h-5 text-red-400" />} borderColor="border-red-500/30" textColor="text-red-400"
+                      items={joinerResults.failed}
+                      onDownload={() => downloadResults(joinerResults.failed, "failed_join.txt")}
+                      onView={() => openDialog(joinerResults.failed, "Failed")} />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Ads */}
+            <div className="mt-8">
+              <AdsBanner />
+            </div>
           </div>
         </div>
       </main>

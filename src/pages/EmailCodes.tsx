@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { IdeasSection } from "@/components/IdeasSection";
+import { AdsBanner } from "@/components/AdsBanner";
 import { Mail, Copy, Check, Loader2, ExternalLink } from "lucide-react";
 
 const AmazonIcon = () => (
@@ -285,6 +286,7 @@ const EmailCodes = () => {
             <IdeasSection section="email" />
           </div>
         </div>
+        <div className="container mx-auto px-4 py-6"><AdsBanner /></div>
       </main>
 
       <Footer />

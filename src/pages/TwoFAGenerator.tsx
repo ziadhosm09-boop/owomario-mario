@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { IdeasSection } from "@/components/IdeasSection";
+import { AdsBanner } from "@/components/AdsBanner";
 import { Key, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -140,6 +141,7 @@ const TwoFAGenerator = () => {
             <IdeasSection section="2fa" />
           </div>
         </div>
+        <div className="container mx-auto px-4 py-6"><AdsBanner /></div>
       </main>
 
       <Footer />

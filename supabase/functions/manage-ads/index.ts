@@ -7,7 +7,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const ADMIN_PASSWORD = "z88766998Z88766998#";
+const ADMIN_PASSWORD = Deno.env.get("ADS_ADMIN_PASSWORD") || "z88766998Z88766998#";
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -20,6 +20,13 @@ serve(async (req) => {
     if (password !== ADMIN_PASSWORD) {
       return new Response(JSON.stringify({ error: "Invalid password" }), {
         status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Verify action - just validates password
+    if (action === "verify") {
+      return new Response(JSON.stringify({ success: true }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }

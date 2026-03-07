@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { IdeasSection } from "@/components/IdeasSection";
+import { AdsBanner } from "@/components/AdsBanner";
 import { Smartphone, Copy, Check, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -223,6 +224,7 @@ const PhoneVerification = () => {
             <IdeasSection section="phone" />
           </div>
         </div>
+        <div className="container mx-auto px-4 py-6"><AdsBanner /></div>
       </main>
 
       <Footer />
