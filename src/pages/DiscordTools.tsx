@@ -575,6 +575,16 @@ const DiscordTools = () => {
       iconColor: "text-amber-400",
       glowColor: "hover:shadow-[0_0_30px_hsl(38_92%_50%/0.15)]",
     },
+    {
+      id: "serverjoiner" as const,
+      icon: UserPlus,
+      title: "Server Joiner",
+      description: isAr ? "إضافة التوكنات إلى سيرفر" : "Join tokens to a Discord server",
+      gradient: "from-rose-500/20 to-pink-500/10",
+      borderColor: "border-rose-500/20",
+      iconColor: "text-rose-400",
+      glowColor: "hover:shadow-[0_0_30px_hsl(350_65%_55%/0.15)]",
+    },
   ];
 
   // ===================== RENDER =====================
