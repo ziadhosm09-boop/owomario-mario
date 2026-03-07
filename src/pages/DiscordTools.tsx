@@ -17,12 +17,13 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ToolsPromotion } from "@/components/ToolsPromotion";
+import { AdsBanner } from "@/components/AdsBanner";
 import { IdeasSection } from "@/components/IdeasSection";
 import {
   Shield, CheckCircle, XCircle, Mail, Smartphone, AlertCircle,
   Download, Eye, Copy, Calendar, Clock, Flag, Lock, User,
   ShoppingCart, ChevronDown, ChevronUp, Loader2, ArrowLeft, KeyRound,
-  Check, X, Zap, Upload, FileText, AlertTriangle, ShieldCheck
+  Check, X, Zap, Upload, FileText, AlertTriangle, ShieldCheck, UserPlus
 } from "lucide-react";
 import {
   Select,
@@ -39,7 +40,7 @@ const DiscordIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-type ActiveTool = null | "trial" | "tokens" | "changepass" | "emailverify";
+type ActiveTool = null | "trial" | "tokens" | "changepass" | "emailverify" | "serverjoiner";
 
 // ===================== TYPES =====================
 interface TokenCheckResults {
