@@ -1,47 +1,40 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { I18nextProvider } from "react-i18next";
-import i18n from "./i18n/config";
-import { ProtectedRoute } from "./components/ProtectedRoute";
-import Index from "./pages/Index";
-import EmailCodes from "./pages/EmailCodes";
-import TwoFAGenerator from "./pages/TwoFAGenerator";
-import PhoneVerification from "./pages/PhoneVerification";
-import DiscordTools from "./pages/DiscordTools";
-import ApiServices from "./pages/ApiServices";
-import Auth from "./pages/Auth";
-import Profile from "./pages/Profile";
-import NotFound from "./pages/NotFound";
-import P2P from "./pages/P2P";
-
-const queryClient = new QueryClient();
+import { ExternalLink } from "lucide-react";
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <I18nextProvider i18n={i18n}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            <Route path="/email" element={<ProtectedRoute><EmailCodes /></ProtectedRoute>} />
-            <Route path="/2fa" element={<ProtectedRoute><TwoFAGenerator /></ProtectedRoute>} />
-            <Route path="/phone" element={<ProtectedRoute><PhoneVerification /></ProtectedRoute>} />
-            <Route path="/discord-tools" element={<ProtectedRoute><DiscordTools /></ProtectedRoute>} />
-            <Route path="/api" element={<ProtectedRoute><ApiServices /></ProtectedRoute>} />
-            <Route path="/p2p" element={<ProtectedRoute><P2P /></ProtectedRoute>} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </I18nextProvider>
-  </QueryClientProvider>
+  <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    {/* Background effects */}
+    <div className="fixed inset-0 pointer-events-none">
+      <div className="absolute top-10 left-[10%] w-[500px] h-[500px] bg-primary/6 rounded-full blur-[150px]" />
+      <div className="absolute top-40 right-[5%] w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[150px]" />
+      <div className="absolute bottom-0 left-[40%] w-[500px] h-[300px] bg-accent/4 rounded-full blur-[120px]" />
+    </div>
+
+    <div className="relative z-10 text-center space-y-8 max-w-lg w-full">
+      <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
+        VerifyHub
+      </h1>
+
+      <div className="glass border border-primary/20 rounded-2xl p-10 shadow-2xl space-y-6">
+        <p className="text-muted-foreground text-lg">
+          تم نقل الموقع! الرابط الجديد هو:
+        </p>
+
+        <a
+          href="https://owomario.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center justify-center gap-3 bg-gradient-to-r from-primary to-secondary text-primary-foreground font-bold text-xl px-8 py-4 rounded-xl shadow-lg hover:opacity-90 hover:scale-105 transition-all duration-300"
+        >
+          owomario.com
+          <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+        </a>
+
+        <p className="text-sm text-muted-foreground">
+          اضغط على الرابط للانتقال للموقع الجديد
+        </p>
+      </div>
+    </div>
+  </div>
 );
 
 export default App;
