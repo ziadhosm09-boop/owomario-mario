@@ -111,6 +111,23 @@ function cleanHref(href: string): string {
   }
 }
 
+async function deleteMessage(accessToken: string, messageId: string) {
+  const url = `https://graph.microsoft.com/v1.0/me/messages/${encodeURIComponent(messageId)}`;
+  try {
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${accessToken}` }
+    });
+    if (response.ok || response.status === 204) {
+      console.log(`Deleted message ${messageId}`);
+    } else {
+      console.warn(`Failed to delete message ${messageId}: ${response.status}`);
+    }
+  } catch (e: any) {
+    console.warn(`Error deleting message ${messageId}: ${e.message || e}`);
+  }
+}
+
 async function waitForDiscordLink(accessToken: string) {
   const seenIds = new Set<string>();
   const start = Date.now();
@@ -160,6 +177,7 @@ async function waitForDiscordLink(accessToken: string) {
         if (link.startsWith("//")) link = "https:" + link;
         if (!/^https?:\/\//i.test(link) && link.startsWith("/")) link = "https://discord.com" + link;
         console.log(`Found Discord link in message ${m.id}: ${link}`);
+        await deleteMessage(accessToken, m.id);
         return link;
       }
     }
