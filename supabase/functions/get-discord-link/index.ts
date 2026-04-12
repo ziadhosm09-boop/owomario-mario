@@ -177,7 +177,6 @@ async function waitForDiscordLink(accessToken: string) {
         if (link.startsWith("//")) link = "https:" + link;
         if (!/^https?:\/\//i.test(link) && link.startsWith("/")) link = "https://discord.com" + link;
         console.log(`Found Discord link in message ${m.id}: ${link}`);
-        await deleteMessage(accessToken, m.id);
         return link;
       }
     }
